@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Typography, Avatar, Divider } from "@mui/material";
+import { Avatar, Box, Divider, Typography } from "@mui/material";
 
 type Props = {
   comments: any[];

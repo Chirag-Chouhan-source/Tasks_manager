@@ -1,10 +1,10 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
-import { useGetSubtaskByIdQuery } from "@/services/api";
 import DetailedSubtask from "@/components/subtasks/DetailedSubtask";
+import { useGetSubtaskByIdQuery } from "@/services/api";
+import { useParams, useRouter } from "next/navigation";
 
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 export default function SubtaskPage() {
   const router = useRouter();

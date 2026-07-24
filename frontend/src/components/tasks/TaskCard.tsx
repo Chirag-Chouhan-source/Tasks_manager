@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 
+import { STATUS_CONFIG } from "@/constants/status";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  Avatar,
+  Box,
   Card,
   CardContent,
-  Typography,
   Chip,
-  Box,
-  Avatar,
   Stack,
+  Typography,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/navigation";
 
 import UILoader from "@/components/common/Loader";
-import { STATUS_CONFIG } from "@/constants/status";
 
 type TaskCardProps = {
   task: any;

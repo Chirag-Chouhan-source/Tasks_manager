@@ -2,20 +2,20 @@
 import { useState } from "react";
 
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
-  Typography,
   Grow,
+  Typography,
 } from "@mui/material";
 
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-import { useDeleteUserMutation } from "@/services/api";
 import StatusSnackbar from "@/components/common/StatusSnackbar";
+import { useDeleteUserMutation } from "@/services/api";
 
 type Props = {
   open: boolean;

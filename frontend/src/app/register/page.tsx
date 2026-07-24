@@ -2,25 +2,25 @@
 
 import styles from "./register.module.css";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Box,
-  Paper,
   Button,
   CircularProgress,
   LinearProgress,
+  Paper,
 } from "@mui/material";
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
+import InputField from "@/components/common/InputField";
+import StatusSnackbar from "@/components/common/StatusSnackbar";
 import {
   getPasswordStrength,
   getPasswordStrengthLabel,
 } from "@/utils/passwordStrength";
-import InputField from "@/components/common/InputField";
-import StatusSnackbar from "@/components/common/StatusSnackbar";
 
 import { hasToken } from "@/utils/auth";
 

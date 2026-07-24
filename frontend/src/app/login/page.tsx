@@ -5,23 +5,26 @@ if (typeof window !== "undefined") {
 }
 import styles from "./login.module.css";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Box,
   Button,
-  Typography,
-  Paper,
   CircularProgress,
+  Paper,
+  Typography,
 } from "@mui/material";
 
-import { api } from "@/services/api";
-import { useGetCurrentUserQuery, useLoginUserMutation } from "@/services/api";
+import {
+  api,
+  useGetCurrentUserQuery,
+  useLoginUserMutation,
+} from "@/services/api";
 
 import { hasToken } from "@/utils/auth";
 

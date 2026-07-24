@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { Menu, MenuItem, ListItemText, Button } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import SortIcon from "@mui/icons-material/Sort";
+import { Button, ListItemText, Menu, MenuItem } from "@mui/material";
+import { useState } from "react";
 
 export type SortValue = {
   label: string;

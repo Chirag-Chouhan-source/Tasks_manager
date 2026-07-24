@@ -6,15 +6,15 @@ import { useState } from "react";
 import {
   Avatar,
   Box,
+  Divider,
   Menu,
   MenuItem,
   Typography,
-  Divider,
 } from "@mui/material";
 
 import { Manrope } from "next/font/google";
 
-import { useLogoutUserMutation, useGetCurrentUserQuery } from "@/services/api";
+import { useGetCurrentUserQuery, useLogoutUserMutation } from "@/services/api";
 import { hasToken } from "@/utils/auth";
 
 const manrope = Manrope({

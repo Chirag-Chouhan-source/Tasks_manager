@@ -1,17 +1,17 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
 
-import { Box, Typography, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent, Typography } from "@mui/material";
 
 import { useGetDashboardStatsQuery } from "@/services/api";
 
-import StatusSnackbar from "@/components/common/StatusSnackbar";
 import UILoader from "@/components/common/Loader";
+import StatusSnackbar from "@/components/common/StatusSnackbar";
 
-import { hasToken } from "@/utils/auth";
 import { STATUS_CONFIG } from "@/constants/status";
+import { hasToken } from "@/utils/auth";
 
 const STATUS_COLORS = {
   backlog: "#f59e0b",

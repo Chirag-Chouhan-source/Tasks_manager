@@ -1,10 +1,10 @@
-import { Select, MenuItem } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import {
-  useUpdateTaskMutation,
   useUpdateSubtaskMutation,
+  useUpdateTaskMutation,
 } from "@/services/api";
 
 import { STATUS_OPTIONS } from "@/constants/status";

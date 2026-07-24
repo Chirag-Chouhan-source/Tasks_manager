@@ -3,11 +3,11 @@
 import { Box } from "@mui/material";
 
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import PendingIcon from "@mui/icons-material/Pending";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import BugReportIcon from "@mui/icons-material/BugReport";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
+import PendingIcon from "@mui/icons-material/Pending";
 
 const STATUS_CONFIG: Record<
   string,

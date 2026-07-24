@@ -1,10 +1,9 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { useGetTaskByIdQuery } from "@/services/api";
 import DetailedTask from "@/components/tasks/DetailedTask";
-import { Box, Typography, Button } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { useGetTaskByIdQuery } from "@/services/api";
+import { Box, Button, Typography } from "@mui/material";
+import { useParams, useRouter } from "next/navigation";
 
 import UILoader from "@/components/common/Loader";
 

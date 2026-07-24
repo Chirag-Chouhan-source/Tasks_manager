@@ -1,29 +1,29 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Divider,
-  Typography,
-  Box,
-  Grow,
   Avatar,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grow,
+  Typography,
 } from "@mui/material";
 
-import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import GroupsIcon from "@mui/icons-material/Groups";
+import PersonIcon from "@mui/icons-material/Person";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 
-import { useUpdateUserMutation, useGetRolesQuery } from "@/services/api";
+import { useGetRolesQuery, useUpdateUserMutation } from "@/services/api";
 
 import InputField from "@/components/common/InputField";
 import StatusSnackbar from "@/components/common/StatusSnackbar";

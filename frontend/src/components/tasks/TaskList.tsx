@@ -1,14 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
-import { useGetKanbanTasksQuery } from "@/services/api";
 import { STATUS_COLUMNS, StatusKey } from "@/constants/status";
+import { useGetKanbanTasksQuery } from "@/services/api";
 
-import TaskCard from "./TaskCard";
 import UILoader from "../common/Loader";
 import { SortValue } from "../common/SortDropdown";
+import TaskCard from "./TaskCard";
 
 type TaskListProps = {
   tasks: any[];

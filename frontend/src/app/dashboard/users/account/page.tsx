@@ -3,23 +3,23 @@
 import {
   Avatar,
   Box,
-  Chip,
-  Typography,
-  TextField,
   Button,
+  Chip,
+  TextField,
+  Typography,
 } from "@mui/material";
 
-import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
-import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
-import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
+import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
+import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
+import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
 
 import { useEffect, useState } from "react";
 
-import { useGetCurrentUserQuery, useUpdateMeMutation } from "@/services/api";
-import { ROLE_CONFIG } from "@/constants/roles";
 import StatusSnackbar from "@/components/common/StatusSnackbar";
 import ChangePasswordDialog from "@/components/users/ChangePasswordDialog";
+import { ROLE_CONFIG } from "@/constants/roles";
+import { useGetCurrentUserQuery, useUpdateMeMutation } from "@/services/api";
 
 export default function AccountPage() {
   // API

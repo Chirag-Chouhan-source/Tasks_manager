@@ -1,11 +1,11 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import DashboardIcon from "@mui/icons-material/DashboardOutlined";
 import TaskIcon from "@mui/icons-material/AssignmentOutlined";
+import DashboardIcon from "@mui/icons-material/DashboardOutlined";
 import PeopleIcon from "@mui/icons-material/PeopleOutline";
 
 import { useGetCurrentUserQuery } from "@/services/api";

@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Box,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   Button,
-  Typography,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
 } from "@mui/material";
 
 import CloseIcon from "@mui/icons-material/Close";
 import TuneIcon from "@mui/icons-material/Tune";
 import Popover from "@mui/material/Popover";
 
-import { useGetUsersQuery, useGetSprintsQuery } from "@/services/api";
 import { STATUS_OPTIONS } from "@/constants/status";
+import { useGetSprintsQuery, useGetUsersQuery } from "@/services/api";
 
 type Props = {
   filters?: any;

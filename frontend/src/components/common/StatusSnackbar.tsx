@@ -1,8 +1,8 @@
 "use client";
 
-import { Snackbar, Box, Typography } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { Box, Snackbar, Typography } from "@mui/material";
 
 type Props = {
   open: boolean;

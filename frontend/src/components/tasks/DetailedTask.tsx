@@ -1,23 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import UILoader from "../common/Loader";
 
 import {
+  Alert,
   Box,
-  Typography,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Divider,
   IconButton,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
   Snackbar,
-  Alert,
+  TextField,
+  Typography,
 } from "@mui/material";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -29,16 +29,16 @@ import {
   useUpdateTaskMutation,
 } from "@/services/api";
 
-import { hasPermission } from "@/utils/permission";
 import { useGetCurrentUserQuery } from "@/services/api";
+import { hasPermission } from "@/utils/permission";
 
 import CreateSubtaskDialog from "@/components/subtasks/CreateSubtaskDialog";
+import CommentInput from "../comment/CommentInput";
+import CommentList from "../comment/CommentList";
 import AssigneeField from "../common/AssigneeField";
 import StatusField from "../common/StatusField";
-import DescriptionField from "./DescriptionField";
 import SubtaskList from "../subtasks/SubtaskList";
-import CommentList from "../comment/CommentList";
-import CommentInput from "../comment/CommentInput";
+import DescriptionField from "./DescriptionField";
 
 const titleSchema = z
   .string()

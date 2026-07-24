@@ -1,10 +1,10 @@
-import { Box, Typography, TextField } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
-  useUpdateTaskMutation,
   useUpdateSubtaskMutation,
+  useUpdateTaskMutation,
 } from "@/services/api";
 
 type Props = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Typography, Skeleton } from "@mui/material";
+import { Box, Skeleton, Typography } from "@mui/material";
 
 type Props = {
   type?: "full" | "task" | "subtask" | "detail" | "taskFlat" | "kanbanColumn";

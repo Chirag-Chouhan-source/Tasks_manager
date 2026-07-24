@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, Chip, IconButton, Paper } from "@mui/material";
+import { Box, Chip, IconButton, Paper, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 
 import {
-  useUpdateTaskMutation,
-  useUpdateSubtaskMutation,
   useGetUsersQuery,
+  useUpdateSubtaskMutation,
+  useUpdateTaskMutation,
 } from "@/services/api";
 
 type Props = {

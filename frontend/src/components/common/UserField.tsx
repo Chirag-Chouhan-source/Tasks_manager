@@ -1,10 +1,10 @@
 "use client";
 
+import { InputAdornment, MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
-import { TextField, MenuItem, InputAdornment } from "@mui/material";
 
-import GroupIcon from "@mui/icons-material/Group";
 import { useGetUsersQuery } from "@/services/api";
+import GroupIcon from "@mui/icons-material/Group";
 
 type Props = {
   name: string;

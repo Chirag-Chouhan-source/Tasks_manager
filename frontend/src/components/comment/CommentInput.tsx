@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Box, TextField, Button, Avatar, Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 
 import {
-  useAddTaskCommentMutation,
   useAddSubtaskCommentMutation,
+  useAddTaskCommentMutation,
+  useGetCurrentUserQuery,
 } from "@/services/api";
-import { useGetCurrentUserQuery } from "@/services/api";
 
 type Props = {
   entityId: number;
