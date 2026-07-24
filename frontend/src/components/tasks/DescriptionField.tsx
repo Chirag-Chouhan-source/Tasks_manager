@@ -10,7 +10,7 @@ import {
 type Props = {
   entityId: number;
   entityType: "task" | "subtask";
-  value: string;
+  value: string | null;
   disabled: boolean;
 };
 
@@ -54,7 +54,7 @@ export default function DescriptionField({
       setIsEditing(false);
     } catch (err) {
       console.error(err);
-      setDescription(value);
+      setDescription(value ?? "");
       setIsEditing(false);
     }
   };
@@ -100,7 +100,7 @@ export default function DescriptionField({
           onBlur={handleSave}
           onKeyDown={(e) => {
             if (e.key === "Escape") {
-              setDescription(value);
+              setDescription(value ?? "");
               setIsEditing(false);
             }
 

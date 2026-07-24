@@ -28,6 +28,7 @@ import {
 
 import { hasPermission } from "@/utils/permission";
 
+import { CurrentUser, Subtask } from "@/types";
 import CommentInput from "../comment/CommentInput";
 import CommentList from "../comment/CommentList";
 import AssigneeField from "../common/AssigneeField";
@@ -40,7 +41,7 @@ const titleSchema = z
   .max(255, "Title cannot exceed 255 characters");
 
 type Props = {
-  subtask: any;
+  subtask: Subtask;
 };
 
 export default function DetailedSubtask({ subtask }: Props) {
@@ -50,7 +51,9 @@ export default function DetailedSubtask({ subtask }: Props) {
   // API
   const [deleteSubtask] = useDeleteSubtaskMutation();
   const [updateSubtask] = useUpdateSubtaskMutation();
-  const { data: currentUser } = useGetCurrentUserQuery(undefined);
+  const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
 
   // Permissions
   const canUpdateSubtask = hasPermission(

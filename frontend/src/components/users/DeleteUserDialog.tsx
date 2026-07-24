@@ -16,11 +16,12 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import StatusSnackbar from "@/components/common/StatusSnackbar";
 import { useDeleteUserMutation } from "@/services/api";
+import { User } from "@/types";
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  user: any;
+  user: User;
 };
 
 export default function DeleteUserDialog({ open, onClose, user }: Props) {

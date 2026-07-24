@@ -17,6 +17,7 @@ import Popover from "@mui/material/Popover";
 
 import { STATUS_OPTIONS } from "@/constants/status";
 import { useGetSprintsQuery, useGetUsersQuery } from "@/services/api";
+import { User } from "@/types";
 
 type Props = {
   filters?: any;
@@ -168,7 +169,7 @@ export default function FilterMenu({
               >
                 <MenuItem value="">All</MenuItem>
 
-                {users?.map((user: any) => (
+                {users?.map((user: User) => (
                   <MenuItem key={user.id} value={user.id}>
                     {user.username}
                   </MenuItem>

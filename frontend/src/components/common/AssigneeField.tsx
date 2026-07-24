@@ -9,11 +9,12 @@ import {
   useUpdateSubtaskMutation,
   useUpdateTaskMutation,
 } from "@/services/api";
+import { User } from "@/types";
 
 type Props = {
   entityId: number;
   entityType: "task" | "subtask";
-  users: any[];
+  users: User[];
   disabled?: boolean;
 };
 
@@ -29,7 +30,9 @@ export default function AssigneeField({
   const [updateSubtask] = useUpdateSubtaskMutation();
 
   // Assignee State
-  const [selectedUsers, setSelectedUsers] = useState(currentUsers || []);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>(
+    currentUsers || [],
+  );
 
   useEffect(() => {
     setSelectedUsers(currentUsers || []);
@@ -40,7 +43,7 @@ export default function AssigneeField({
   const [closeTimer, setCloseTimer] = useState<any>(null);
 
   // Assignee Action
-  const updateUsers = async (updatedUsers: any[]) => {
+  const updateUsers = async (updatedUsers: User[]) => {
     const ids = updatedUsers.map((u) => u.id);
 
     try {
@@ -60,7 +63,7 @@ export default function AssigneeField({
     }
   };
 
-  const handleAddUser = async (user: any) => {
+  const handleAddUser = async (user: User) => {
     if (selectedUsers.find((u) => u.id === user.id)) return;
 
     const updated = [...selectedUsers, user];
@@ -102,7 +105,7 @@ export default function AssigneeField({
       >
         {!selectedUsers.length && <Typography>No assignee</Typography>}
 
-        {selectedUsers.map((user) => (
+        {selectedUsers.map((user: User) => (
           <Chip
             key={user.id}
             label={user.username}

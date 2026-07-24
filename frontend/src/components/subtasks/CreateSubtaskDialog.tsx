@@ -22,6 +22,7 @@ import TitleIcon from "@mui/icons-material/Title";
 import { useGetUsersQuery } from "@/services/api";
 
 import { STATUS_OPTIONS } from "@/constants/status";
+import { User } from "@/types";
 import InputField from "../common/InputField";
 import StatusSnackbar from "../common/StatusSnackbar";
 import UserField from "../common/UserField";
@@ -44,7 +45,7 @@ export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
   const { data: users = [] } = useGetUsersQuery();
 
   const getUserNameById = (id: number) => {
-    const user = users.find((u: any) => u.id === id);
+    const user = users.find((u: User) => u.id === id);
     return user?.username || "";
   };
 

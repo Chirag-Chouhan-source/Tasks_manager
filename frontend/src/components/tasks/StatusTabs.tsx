@@ -2,6 +2,7 @@
 
 import { Box } from "@mui/material";
 
+import { Status } from "@/types";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import BugReportIcon from "@mui/icons-material/BugReport";
@@ -10,7 +11,7 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 import PendingIcon from "@mui/icons-material/Pending";
 
 const STATUS_CONFIG: Record<
-  string,
+  Status,
   {
     label: string;
     icon: React.ReactNode;
@@ -43,9 +44,9 @@ const STATUS_CONFIG: Record<
 };
 
 type StatusTabsProps = {
-  statusTabs: string[];
-  activeStatus: string;
-  onStatusChange: (status: string) => void;
+  statusTabs: Array<Status | "">;
+  activeStatus: Status | "";
+  onStatusChange: (status: Status | "") => void;
 };
 
 export default function StatusTabs({
@@ -69,7 +70,7 @@ export default function StatusTabs({
     >
       {statusTabs.map((status) => {
         const isActive = activeStatus === status;
-        const config = STATUS_CONFIG[status];
+        const config = status ? STATUS_CONFIG[status] : undefined;
 
         return (
           <Box

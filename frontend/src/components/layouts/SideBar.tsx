@@ -9,6 +9,7 @@ import DashboardIcon from "@mui/icons-material/DashboardOutlined";
 import PeopleIcon from "@mui/icons-material/PeopleOutline";
 
 import { useGetCurrentUserQuery } from "@/services/api";
+import { CurrentUser } from "@/types";
 import { hasPermission } from "@/utils/permission";
 
 export default function Sidebar() {
@@ -16,7 +17,9 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   // API
-  const { data: currentUser } = useGetCurrentUserQuery(undefined);
+  const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
 
   // Menu Items
   const menuItems = [

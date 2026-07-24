@@ -33,6 +33,7 @@ import { useGetCurrentUserQuery } from "@/services/api";
 import { hasPermission } from "@/utils/permission";
 
 import CreateSubtaskDialog from "@/components/subtasks/CreateSubtaskDialog";
+import { CurrentUser, Task } from "@/types";
 import CommentInput from "../comment/CommentInput";
 import CommentList from "../comment/CommentList";
 import AssigneeField from "../common/AssigneeField";
@@ -47,7 +48,7 @@ const titleSchema = z
   .max(255, "Title cannot exceed 255 characters");
 
 type Props = {
-  task: any;
+  task: Task;
 };
 
 export default function DetailedTask({ task }: Props) {
@@ -56,7 +57,9 @@ export default function DetailedTask({ task }: Props) {
   const searchParams = useSearchParams();
 
   // Permissions
-  const { data: currentUser } = useGetCurrentUserQuery(undefined);
+  const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
 
   // Task Details
   const canUpdateTask = hasPermission(currentUser?.permissions, "task.update");

@@ -31,6 +31,8 @@ import { hasToken } from "@/utils/auth";
 import InputField from "@/components/common/InputField";
 import StatusSnackbar from "@/components/common/StatusSnackbar";
 
+import { CurrentUser } from "@/types";
+
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
 
@@ -64,7 +66,10 @@ export default function LoginPage() {
   const { data: currentUser, isLoading: isUserLoading } =
     useGetCurrentUserQuery(undefined, {
       skip: !hasToken(),
-    });
+    }) as {
+      data?: CurrentUser;
+      isLoading: boolean;
+    };
 
   // Notification
   const [snackbar, setSnackbar] = useState({

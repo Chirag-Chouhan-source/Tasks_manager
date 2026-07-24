@@ -4,6 +4,7 @@ import { InputAdornment, MenuItem, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
 import { useGetUsersQuery } from "@/services/api";
+import { User } from "@/types";
 import GroupIcon from "@mui/icons-material/Group";
 
 type Props = {
@@ -20,7 +21,7 @@ export default function UserField({ name, control }: Props) {
       control={control}
       render={({ field }) => {
         const getUserNameById = (id: number) => {
-          const user = users.find((u: any) => u.id === id);
+          const user = users.find((u: User) => u.id === id);
           return user?.username || "";
         };
 
@@ -72,7 +73,7 @@ export default function UserField({ name, control }: Props) {
               borderRadius: 2,
             }}
           >
-            {users.map((user: any) => (
+            {users.map((user: User) => (
               <MenuItem
                 key={user.id}
                 value={user.id}

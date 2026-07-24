@@ -6,15 +6,16 @@ import { useEffect, useState } from "react";
 import { STATUS_COLUMNS, StatusKey } from "@/constants/status";
 import { useGetKanbanTasksQuery } from "@/services/api";
 
+import { Task } from "@/types";
 import UILoader from "../common/Loader";
 import { SortValue } from "../common/SortDropdown";
 import TaskCard from "./TaskCard";
 
 type TaskListProps = {
-  tasks: any[];
-  onTaskClick: (task: any) => void;
+  tasks: Task[];
+  onTaskClick: (task: Task) => void;
   grouped?: boolean;
-  onAddTask?: (status?: string) => void;
+  onAddTask?: (status?: StatusKey) => void;
   canCreateTask: boolean;
   filters?: any;
   sort?: SortValue;
@@ -41,7 +42,7 @@ export default function TaskList({
     completed: 1,
   });
 
-  const [columnData, setColumnData] = useState<Record<StatusKey, any[]>>({
+  const [columnData, setColumnData] = useState<Record<StatusKey, Task[]>>({
     backlog: [],
     todo: [],
     in_progress: [],
@@ -74,7 +75,7 @@ export default function TaskList({
   const [isRefreshingBoard, setIsRefreshingBoard] = useState(false);
 
   // Board Data Management
-  const mergeUnique = (oldList: any[] = [], newList: any[] = []) => {
+  const mergeUnique = (oldList: Task[] = [], newList: Task[] = []) => {
     const map = new Map();
     [...oldList, ...newList].forEach((item) => {
       map.set(item.id, item);
@@ -169,7 +170,7 @@ export default function TaskList({
           alignContent: "flex-start",
         }}
       >
-        {tasks.map((task: any) => (
+        {tasks.map((task: Task) => (
           <Box
             key={task.id}
             sx={{
@@ -275,7 +276,7 @@ export default function TaskList({
                 <Box>No tasks</Box>
               ) : (
                 <Box className="kanban-tasks">
-                  {colTasks.map((task: any) => (
+                  {colTasks.map((task: Task) => (
                     <Box key={task.id} className="kanban-task-card">
                       <TaskCard task={task} onClick={() => onTaskClick(task)} />
                     </Box>

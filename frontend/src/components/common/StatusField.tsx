@@ -8,11 +8,12 @@ import {
 } from "@/services/api";
 
 import { STATUS_OPTIONS } from "@/constants/status";
+import { Status } from "@/types";
 
 type Props = {
   entityId: number;
   entityType: "task" | "subtask";
-  value: string;
+  value: Status;
   disabled?: boolean;
 };
 
@@ -27,7 +28,7 @@ export default function StatusField({
   const [updateSubtask] = useUpdateSubtaskMutation();
 
   // Status Action
-  const handleChange = async (newStatus: string) => {
+  const handleChange = async (newStatus: Status) => {
     try {
       if (entityType === "task") {
         await updateTask({
@@ -48,7 +49,7 @@ export default function StatusField({
   return (
     <Select
       value={value}
-      onChange={(e) => handleChange(e.target.value as string)}
+      onChange={(e) => handleChange(e.target.value as Status)}
       size="small"
       IconComponent={ArrowDropDownIcon}
       disabled={disabled}

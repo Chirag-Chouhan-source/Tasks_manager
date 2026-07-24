@@ -1,23 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import {
+  Alert,
   Box,
-  Typography,
-  IconButton,
-  Tooltip,
-  TextField,
   Button,
   Chip,
   Dialog,
-  DialogTitle,
-  DialogContent,
   DialogActions,
-  Snackbar,
-  Alert,
+  DialogContent,
+  DialogTitle,
+  IconButton,
   InputAdornment,
+  Snackbar,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -26,10 +26,11 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { useDeleteSubtaskMutation, useGetSubtasksQuery } from "@/services/api";
 
-import UILoader from "@/components/common/Loader";
-import SortDropdown, { DEFAULT_SORT, SortValue } from "../common/SortDropdown";
 import FilterMenu from "@/components/common/FilterMenu";
+import UILoader from "@/components/common/Loader";
 import { STATUS_CONFIG } from "@/constants/status";
+import { Subtask } from "@/types";
+import SortDropdown, { DEFAULT_SORT, SortValue } from "../common/SortDropdown";
 
 type Props = {
   taskId: number;
@@ -227,7 +228,7 @@ export default function SubtaskList({
         </Typography>
       ) : (
         <>
-          {subtasks.map((subtask: any) => {
+          {subtasks.map((subtask: Subtask) => {
             const statusConfig =
               STATUS_CONFIG[subtask.status as keyof typeof STATUS_CONFIG];
             return (

@@ -16,9 +16,10 @@ import {
 import { useRouter } from "next/navigation";
 
 import UILoader from "@/components/common/Loader";
+import { Subtask, Task } from "@/types";
 
 type TaskCardProps = {
-  task: any;
+  task: Task;
   onClick?: () => void;
 };
 
@@ -28,7 +29,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
 
   // Task Overview
   const users = task.users || [];
-  const statusConfig = STATUS_CONFIG[task.status as keyof typeof STATUS_CONFIG];
+  const statusConfig = STATUS_CONFIG[task.status];
 
   // Subtask Management
   const [expanded, setExpanded] = useState(false);
@@ -263,7 +264,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
               }}
             >
               <Box sx={{ mt: 0.8 }}>
-                {task.subtasks.map((sub: any) => (
+                {task.subtasks.map((sub: Subtask) => (
                   <Box
                     key={sub.id}
                     onClick={(e) => {

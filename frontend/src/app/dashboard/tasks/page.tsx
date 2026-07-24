@@ -34,6 +34,8 @@ import SortDropdown, {
 
 import { STATUS_VALUES } from "@/constants/status";
 
+import { CurrentUser, Task } from "@/types";
+
 export default function TasksPage() {
   // Navigation
   const router = useRouter();
@@ -43,7 +45,9 @@ export default function TasksPage() {
   const isMobile = useMediaQuery("(max-width:768px)");
 
   // API
-  const { data: currentUser } = useGetCurrentUserQuery(undefined);
+  const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
   const [createTask] = useCreateTaskMutation();
 
   // Search, Filter & Sorting
@@ -261,7 +265,7 @@ export default function TasksPage() {
               grouped
               filters={filters}
               sort={sort}
-              onTaskClick={(task: any) => {
+              onTaskClick={(task: Task) => {
                 setLoadingTaskId(task.id);
                 router.push(`/dashboard/tasks/${task.id}`);
               }}
@@ -285,7 +289,7 @@ export default function TasksPage() {
               grouped={false}
               filters={filters}
               sort={sort}
-              onTaskClick={(task: any) => {
+              onTaskClick={(task: Task) => {
                 setLoadingTaskId(task.id);
                 router.push(`/dashboard/tasks/${task.id}`);
               }}

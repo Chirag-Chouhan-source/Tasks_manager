@@ -29,6 +29,8 @@ import {
   useRegisterUserMutation,
 } from "@/services/api";
 
+import { CurrentUser } from "@/types";
+
 const registerSchema = z
   .object({
     username: z
@@ -82,7 +84,10 @@ export default function RegisterPage() {
   const { data: currentUser, isLoading: isUserLoading } =
     useGetCurrentUserQuery(undefined, {
       skip: !hasToken(),
-    });
+    }) as {
+      data?: CurrentUser;
+      isLoading: boolean;
+    };
 
   // Notification
   const [snackbar, setSnackbar] = useState({

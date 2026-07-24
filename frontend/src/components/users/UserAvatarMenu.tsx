@@ -17,6 +17,8 @@ import { Manrope } from "next/font/google";
 import { useGetCurrentUserQuery, useLogoutUserMutation } from "@/services/api";
 import { hasToken } from "@/utils/auth";
 
+import { CurrentUser } from "@/types";
+
 const manrope = Manrope({
   subsets: ["latin"],
   weight: ["600", "700"],
@@ -29,7 +31,7 @@ export default function UserAvatarMenu() {
   // User Account
   const { data: user } = useGetCurrentUserQuery(undefined, {
     skip: !hasToken(),
-  });
+  }) as { data?: CurrentUser };
 
   // User Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

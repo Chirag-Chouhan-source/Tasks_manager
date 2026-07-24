@@ -1,9 +1,10 @@
 "use client";
 
+import { Comment } from "@/types";
 import { Avatar, Box, Divider, Typography } from "@mui/material";
 
 type Props = {
-  comments: any[];
+  comments: Comment[];
 };
 
 export default function CommentList({ comments }: Props) {

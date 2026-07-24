@@ -17,6 +17,8 @@ import EditUserDialog from "@/components/users/EditUserDialog";
 
 import { ROLE_CONFIG } from "@/constants/roles";
 
+import { CurrentUser, User } from "@/types";
+
 export default function UsersPage() {
   // Navigation
   const router = useRouter();
@@ -24,7 +26,10 @@ export default function UsersPage() {
   // API
   const { data, isError } = useGetUsersQuery();
   const { data: currentUser, isLoading: isUserLoading } =
-    useGetCurrentUserQuery(undefined);
+    useGetCurrentUserQuery(undefined) as {
+      data?: CurrentUser;
+      isLoading: boolean;
+    };
 
   // Permission
   const canEditUsers = hasPermission(currentUser?.permissions, "user.update");
@@ -32,7 +37,7 @@ export default function UsersPage() {
   const canManageUsers = canEditUsers || canDeleteUsers;
 
   // User Action
-  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
@@ -145,7 +150,7 @@ export default function UsersPage() {
               },
             }}
           >
-            {data?.map((user: any) => {
+            {data?.map((user: User) => {
               const roleName = user.roles?.[0]?.name;
 
               const roleConfig = ROLE_CONFIG[roleName] ?? ROLE_CONFIG.default;
@@ -185,7 +190,7 @@ export default function UsersPage() {
                           fontWeight: 600,
                         }}
                       >
-                        {user.username?.charAt(0)?.toUpperCase()}
+                        {user.username.charAt(0)?.toUpperCase()}
                       </Avatar>
 
                       <Typography
@@ -341,19 +346,23 @@ export default function UsersPage() {
         </Box>
       </Box>
 
-      <DeleteUserDialog
-        open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-        user={selectedUser}
-      />
-      <EditUserDialog
-        open={openEditDialog}
-        onClose={() => {
-          setOpenEditDialog(false);
-          setSelectedUser(null);
-        }}
-        user={selectedUser}
-      />
+      {selectedUser && (
+        <DeleteUserDialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+          user={selectedUser}
+        />
+      )}
+      {selectedUser && (
+        <EditUserDialog
+          open={openEditDialog}
+          onClose={() => {
+            setOpenEditDialog(false);
+            setSelectedUser(null);
+          }}
+          user={selectedUser}
+        />
+      )}
     </>
   );
 }

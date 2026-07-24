@@ -10,6 +10,8 @@ import {
   useGetCurrentUserQuery,
 } from "@/services/api";
 
+import { CurrentUser } from "@/types";
+
 type Props = {
   entityId: number;
   entityType: "task" | "subtask";
@@ -26,7 +28,9 @@ export default function CommentInput({
     useAddTaskCommentMutation();
   const [addSubtaskComment, { isLoading: isAddingSubtask }] =
     useAddSubtaskCommentMutation();
-  const { data: currentUser } = useGetCurrentUserQuery(undefined);
+  const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
 
   // Comment State
   const [text, setText] = useState("");

@@ -28,10 +28,12 @@ import { useGetRolesQuery, useUpdateUserMutation } from "@/services/api";
 import InputField from "@/components/common/InputField";
 import StatusSnackbar from "@/components/common/StatusSnackbar";
 
+import { Role, User } from "@/types";
+
 type Props = {
   open: boolean;
   onClose: () => void;
-  user: any;
+  user: User;
 };
 
 const editUserSchema = z.object({
@@ -205,7 +207,7 @@ export default function EditUserDialog({ open, onClose, user }: Props) {
                   placeholder="Select Role"
                   errors={errors}
                   options={
-                    roles?.map((role: any) => ({
+                    roles?.map((role: Role) => ({
                       label: role.name,
                       value: role.id,
                     })) || []

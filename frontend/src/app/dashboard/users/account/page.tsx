@@ -21,9 +21,13 @@ import ChangePasswordDialog from "@/components/users/ChangePasswordDialog";
 import { ROLE_CONFIG } from "@/constants/roles";
 import { useGetCurrentUserQuery, useUpdateMeMutation } from "@/services/api";
 
+import { CurrentUser } from "@/types";
+
 export default function AccountPage() {
   // API
-  const { data: user } = useGetCurrentUserQuery(undefined);
+  const { data: user } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
   const [updateMe, { isLoading }] = useUpdateMeMutation();
 
   // Profile Editing
@@ -157,7 +161,7 @@ export default function AccountPage() {
               mb: 2,
             }}
           >
-            {user.username?.charAt(0)?.toUpperCase()}
+            {user.username.charAt(0)?.toUpperCase()}
           </Avatar>
 
           <Typography
