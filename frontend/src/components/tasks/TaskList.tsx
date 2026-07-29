@@ -192,9 +192,6 @@ export default function TaskList({
   if (isLoading && !data) {
     return <UILoader type="task" text="Loading board..." />;
   }
-  if (grouped && isFetching) {
-    return <UILoader type="task" text="Updating board..." />;
-  }
 
   return (
     <Box

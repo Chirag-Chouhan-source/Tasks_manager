@@ -3,7 +3,16 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Avatar, Box, Button, Chip, Divider, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -20,33 +29,32 @@ import { ROLE_CONFIG } from "@/constants/roles";
 import { CurrentUser, User } from "@/types";
 
 export default function UsersPage() {
-  // Navigation
   const router = useRouter();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  // API
   const { data, isError } = useGetUsersQuery();
+
   const { data: currentUser, isLoading: isUserLoading } =
     useGetCurrentUserQuery(undefined) as {
       data?: CurrentUser;
       isLoading: boolean;
     };
 
-  // Permission
   const canEditUsers = hasPermission(currentUser?.permissions, "user.update");
+
   const canDeleteUsers = hasPermission(currentUser?.permissions, "user.delete");
+
   const canManageUsers = canEditUsers || canDeleteUsers;
 
-  // User Action
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
   const [openEditDialog, setOpenEditDialog] = useState(false);
+
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  // Layout
-  const gridColumns = canManageUsers
-    ? "300px 300px 300px 300px"
-    : "500px 500px 500px";
+  const gridColumns = canManageUsers ? "2fr 2fr 1fr 1fr" : "2fr 2fr 1fr";
 
-  // Security and Redirects
   useEffect(() => {
     if (
       !isUserLoading &&
@@ -57,7 +65,6 @@ export default function UsersPage() {
     }
   }, [currentUser, isUserLoading, router]);
 
-  // Error Handling
   if (
     !isUserLoading &&
     currentUser &&
@@ -78,78 +85,78 @@ export default function UsersPage() {
     <>
       <Box
         sx={{
-          height: "100%",
-          p: 3,
-          background: "linear-gradient(to bottom, #edeeef, #ffffff)",
-          display: "flex",
-          flexDirection: "column",
+          minHeight: "100%",
+          p: {
+            xs: 2,
+            sm: 3,
+            md: 4,
+          },
+          background: "linear-gradient(to bottom, #f8fafc, #ffffff)",
         }}
       >
-        {/* HEADER */}
+        {/* PAGE HEADER */}
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" fontWeight={700}>
+          <Typography
+            sx={{
+              fontWeight: 700,
+              color: "#0f172a",
+              fontSize: {
+                xs: "1.6rem",
+                sm: "2rem",
+                md: "2.25rem",
+              },
+            }}
+          >
             User Management
           </Typography>
 
           <Typography
             sx={{
+              mt: 0.5,
               color: "#64748b",
-              fontSize: 14,
+              fontSize: {
+                xs: 13,
+                sm: 14,
+              },
             }}
           >
             Manage user accounts, profile information, and security settings.
           </Typography>
         </Box>
 
-        {/* CONTAINER */}
         <Box
           sx={{
-            backgroundColor: "#fff",
-            border: "1px solid #e2e8f0",
+            background: "#fff",
             borderRadius: 4,
+            border: "1px solid #e2e8f0",
             overflow: "hidden",
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            boxShadow: "0 2px 8px rgba(15,23,42,0.05)",
+            boxShadow: "0 4px 20px rgba(15,23,42,0.06)",
           }}
         >
-          {/* HEADER */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: gridColumns,
-              px: 3,
-              py: 2,
-              borderBottom: "1px solid #e2e8f0",
-              backgroundColor: "#f8fafc",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#64748b",
-            }}
-          >
-            <Box>User</Box>
-            <Box>Email</Box>
-            <Box>Role</Box>
-            {canManageUsers && <Box>Actions</Box>}
-          </Box>
+          {/* Desktop Header */}
+          {!isMobile && (
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: gridColumns,
+                px: 3,
+                py: 2,
+                background: "#f8fafc",
+                borderBottom: "1px solid #e2e8f0",
+                fontWeight: 600,
+                fontSize: 13,
+                color: "#64748b",
+              }}
+            >
+              <Box>User</Box>
+              <Box>Email</Box>
+              <Box>Role</Box>
+              {canManageUsers && <Box>Actions</Box>}
+            </Box>
+          )}
 
-          {/* LIST */}
-          <Box
-            sx={{
-              flex: 1,
-              overflowY: "auto",
-
-              "&::-webkit-scrollbar": {
-                width: "8px",
-              },
-
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#cbd5e1",
-                borderRadius: "999px",
-              },
-            }}
-          >
+          {/* USERS */}
+          <Box>
             {data?.map((user: User) => {
               const roleName = user.roles?.[0]?.name;
 
@@ -157,186 +164,243 @@ export default function UsersPage() {
 
               return (
                 <Box key={user.id}>
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: gridColumns,
-                      alignItems: "center",
-                      px: 3,
-                      py: 1,
-                      transition: "all 0.2s ease",
-
-                      "&:hover": {
-                        backgroundColor: "#f8fafc",
-                        boxShadow: "inset 0 0 0 1px #e2e8f0",
-                      },
-                    }}
-                  >
+                  {/* MOBILE CARD */}
+                  {isMobile ? (
                     <Box
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.5,
+                        p: 2,
                       }}
                     >
-                      <Avatar
-                        sx={{
-                          width: 32,
-                          height: 32,
-                          background:
-                            "linear-gradient(135deg, #2563eb, #7c3aed)",
-                          boxShadow: "0 6px 16px rgba(37,99,235,0.25)",
-                          fontSize: 14,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {user.username.charAt(0)?.toUpperCase()}
-                      </Avatar>
-
-                      <Typography
-                        sx={{
-                          fontWeight: 600,
-                          color: "#0f172a",
-                        }}
-                      >
-                        {user.username}
-                      </Typography>
-                    </Box>
-                    <Typography
-                      sx={{
-                        color: "#64748b",
-                        fontSize: 14,
-                      }}
-                    >
-                      {user.email}
-                    </Typography>
-                    <Box>
-                      {user.roles?.[0]?.name ? (
-                        <Chip
-                          label={roleName}
-                          size="small"
-                          sx={{
-                            width: 100,
-
-                            height: 26,
-                            fontSize: 12,
-                            fontWeight: 600,
-
-                            bgcolor: roleConfig.bg,
-                            color: roleConfig.color,
-
-                            border: `1px solid ${roleConfig.color}20`,
-
-                            justifyContent: "center",
-
-                            "& .MuiChip-label": {
-                              px: 0,
-                              width: "100%",
-                              textAlign: "center",
-                            },
-                          }}
-                        />
-                      ) : (
-                        <Chip
-                          label="Assign Role"
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            width: 110,
-                            cursor: "default",
-
-                            height: 26,
-
-                            color: "#94a3b8",
-                            borderColor: "#cbd5e1",
-
-                            bgcolor: "#f8fafc",
-
-                            "& .MuiChip-label": {
-                              width: "100%",
-                              textAlign: "center",
-                              fontStyle: "italic",
-                            },
-                          }}
-                        />
-                      )}
-                    </Box>
-                    {canManageUsers && (
                       <Box
                         sx={{
                           display: "flex",
-                          gap: 1,
                           alignItems: "center",
+                          gap: 1.5,
+                          mb: 2,
                         }}
                       >
-                        {canEditUsers && (
-                          <Button
-                            startIcon={<EditOutlinedIcon />}
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setOpenEditDialog(true);
-                            }}
+                        <Avatar
+                          sx={{
+                            width: 44,
+                            height: 44,
+                            fontWeight: 600,
+                            background:
+                              "linear-gradient(135deg,#2563eb,#7c3aed)",
+                          }}
+                        >
+                          {user.username?.charAt(0)?.toUpperCase()}
+                        </Avatar>
+
+                        <Box>
+                          <Typography
                             sx={{
-                              textTransform: "none",
-                              minWidth: 80,
-                              height: 32,
-
-                              borderRadius: "10px",
-
-                              background:
-                                "linear-gradient(135deg, #2563eb, #3b82f6)",
-
-                              color: "#fff",
-
-                              fontWeight: 600,
-
-                              boxShadow: "0 4px 12px rgba(37,99,235,0.25)",
-
-                              "&:hover": {
-                                background:
-                                  "linear-gradient(135deg, #1d4ed8, #2563eb)",
-
-                                boxShadow: "0 8px 18px rgba(37,99,235,0.35)",
-                              },
+                              fontWeight: 700,
+                              color: "#0f172a",
                             }}
                           >
-                            Edit
-                          </Button>
-                        )}
+                            {user.username}
+                          </Typography>
 
-                        {canDeleteUsers && (
-                          <Button
-                            color="error"
-                            variant="outlined"
-                            startIcon={<DeleteOutlineIcon />}
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setOpenDeleteDialog(true);
-                            }}
+                          <Typography
                             sx={{
-                              textTransform: "none",
-
-                              minWidth: 80,
-                              height: 32,
-
-                              borderRadius: "10px",
-
-                              borderWidth: "1.5px",
-
-                              fontWeight: 600,
-
-                              "&:hover": {
-                                borderWidth: "1.5px",
-                                backgroundColor: "#fef2f2",
-                              },
+                              fontSize: 13,
+                              color: "#64748b",
+                              wordBreak: "break-word",
                             }}
                           >
-                            Delete
-                          </Button>
-                        )}
+                            {user.email}
+                          </Typography>
+                        </Box>
                       </Box>
-                    )}
-                  </Box>
+
+                      <Chip
+                        label={roleName || "Assign Role"}
+                        size="small"
+                        sx={{
+                          mb: 2,
+                          bgcolor: roleName ? roleConfig.bg : "#f8fafc",
+                          color: roleName ? roleConfig.color : "#94a3b8",
+                          border: `1px solid ${
+                            roleName ? `${roleConfig.color}20` : "#cbd5e1"
+                          }`,
+                          fontWeight: 600,
+                        }}
+                      />
+
+                      {canManageUsers && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                            flexWrap: "wrap",
+                          }}
+                        >
+                          {canEditUsers && (
+                            <Button
+                              startIcon={<EditOutlinedIcon />}
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setOpenEditDialog(true);
+                              }}
+                              sx={{
+                                minWidth: 80,
+                                height: 40,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                fontWeight: 500,
+                                background:
+                                  "linear-gradient(135deg,#2563eb,#3b82f6)",
+                                color: "#fff",
+
+                                "&:hover": {
+                                  background:
+                                    "linear-gradient(135deg,#1d4ed8,#2563eb)",
+                                },
+                              }}
+                            >
+                              Edit
+                            </Button>
+                          )}
+
+                          {canDeleteUsers && (
+                            <Button
+                              variant="outlined"
+                              color="error"
+                              startIcon={<DeleteOutlineIcon />}
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setOpenDeleteDialog(true);
+                              }}
+                              sx={{
+                                minWidth: 80,
+                                height: 40,
+                                borderRadius: 2,
+                                textTransform: "none",
+                                fontWeight: 500,
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          )}
+                        </Box>
+                      )}
+                    </Box>
+                  ) : (
+                    /* DESKTOP ROW */
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: gridColumns,
+                        alignItems: "center",
+                        px: 3,
+                        py: 2,
+                        transition: "all .2s ease",
+
+                        "&:hover": {
+                          background: "#f8fafc",
+                        },
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1.5,
+                        }}
+                      >
+                        <Avatar
+                          sx={{
+                            width: 38,
+                            height: 38,
+                            fontWeight: 600,
+                            background:
+                              "linear-gradient(135deg,#2563eb,#7c3aed)",
+                          }}
+                        >
+                          {user.username.charAt(0).toUpperCase()}
+                        </Avatar>
+
+                        <Typography
+                          sx={{
+                            fontWeight: 600,
+                          }}
+                        >
+                          {user.username}
+                        </Typography>
+                      </Box>
+
+                      <Typography
+                        sx={{
+                          color: "#64748b",
+                          fontSize: 14,
+                        }}
+                      >
+                        {user.email}
+                      </Typography>
+
+                      <Chip
+                        label={roleName || "Assign Role"}
+                        size="small"
+                        sx={{
+                          width: "fit-content",
+                          bgcolor: roleName ? roleConfig.bg : "#f8fafc",
+
+                          color: roleName ? roleConfig.color : "#94a3b8",
+
+                          border: `1px solid ${
+                            roleName ? `${roleConfig.color}20` : "#cbd5e1"
+                          }`,
+
+                          fontWeight: 600,
+                        }}
+                      />
+
+                      {canManageUsers && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            gap: 1,
+                          }}
+                        >
+                          {canEditUsers && (
+                            <Button
+                              size="small"
+                              startIcon={<EditOutlinedIcon />}
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setOpenEditDialog(true);
+                              }}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                              }}
+                            >
+                              Edit
+                            </Button>
+                          )}
+
+                          {canDeleteUsers && (
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              color="error"
+                              startIcon={<DeleteOutlineIcon />}
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setOpenDeleteDialog(true);
+                              }}
+                              sx={{
+                                textTransform: "none",
+                                borderRadius: 2,
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          )}
+                        </Box>
+                      )}
+                    </Box>
+                  )}
 
                   <Divider />
                 </Box>
@@ -353,6 +417,7 @@ export default function UsersPage() {
           user={selectedUser}
         />
       )}
+
       {selectedUser && (
         <EditUserDialog
           open={openEditDialog}

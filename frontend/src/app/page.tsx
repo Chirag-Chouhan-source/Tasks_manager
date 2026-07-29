@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { hasToken } from "@/utils/auth";
 import {
   AppBar,
   Box,
@@ -10,8 +11,21 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (hasToken()) {
+      router.replace("/dashboard");
+    }
+  }, [router]);
+  if (hasToken()) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
