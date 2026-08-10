@@ -36,7 +36,7 @@ def create_subtask(
         redis_client.setex(
             f"subtask:{result['id']}",
             180,
-            json.dumps(SubTaskResponse.model_validate(result).model_dump()),
+            json.dumps(SubTaskResponse.model_validate(result).model_dump(mode="json")),
         )
     except Exception:
         pass
@@ -44,6 +44,9 @@ def create_subtask(
     # ✅ invalidate list cache
     try:
         for key in redis_client.scan_iter(f"subtasks:{task_id}:*"):
+            redis_client.delete(key)
+        redis_client.delete(f"task:{task_id}")
+        for key in redis_client.scan_iter("tasks:*"):
             redis_client.delete(key)
     except Exception:
         pass
@@ -126,7 +129,7 @@ def get_subtasks(
             redis_client.setex(
                 cache_key,
                 180,
-                json.dumps(response),
+                json.dumps(response, default=str),
             )
         except Exception:
             pass
@@ -160,7 +163,7 @@ def get_subtask_by_id(subtask_id: int, db: Session = Depends(get_db)):
         redis_client.setex(
             cache_key,
             300,
-            json.dumps(SubTaskResponse.model_validate(subtask).model_dump()),
+            json.dumps(SubTaskResponse.model_validate(subtask).model_dump(mode="json")),
         )
     except Exception:
         pass
@@ -183,7 +186,7 @@ def update_subtask(
         redis_client.setex(
             f"subtask:{subtask_id}",
             60,
-            json.dumps(SubTaskResponse.model_validate(result).model_dump()),
+            json.dumps(SubTaskResponse.model_validate(result).model_dump(mode="json")),
         )
     except Exception:
         pass
@@ -191,6 +194,9 @@ def update_subtask(
     # ✅ invalidate list cache
     try:
         for key in redis_client.scan_iter("subtasks:*"):
+            redis_client.delete(key)
+        redis_client.delete(f"task:{result['task_id']}")
+        for key in redis_client.scan_iter("tasks:*"):
             redis_client.delete(key)
     except Exception:
         pass
@@ -201,7 +207,7 @@ def update_subtask(
 @router.delete("/subtasks/bulk", response_model=SubTaskBulkDeleteResponse)
 def delete_subtasks_bulk(
     payload: SubTaskBulkDelete,
-    db: session = Depends(get_db),
+    db: Session = Depends(get_db),
     current_user=Depends(require_permission("subtask.delete")),
 ):
 
@@ -217,6 +223,11 @@ def delete_subtasks_bulk(
 
         for key in redis_client.scan_iter(f"subtasks:{payload.task_id}:*"):
             redis_client.delete(key)
+
+        redis_client.delete(f"task:{payload.task_id}")
+        for key in redis_client.scan_iter("tasks:*"):
+            redis_client.delete(key)
+
     except Exception:
         pass
 
@@ -229,6 +240,8 @@ def delete_subtask(
     db: Session = Depends(get_db),
     current_user=Depends(require_permission("subtask.delete")),
 ):
+    existing = services_subtask.get_subtask_by_id(db, subtask_id)
+    task_id = existing["task_id"]
 
     result = services_subtask.delete_subtask(db, subtask_id)
 
@@ -236,7 +249,12 @@ def delete_subtask(
     try:
         redis_client.delete(f"subtask:{subtask_id}")
 
-        for key in redis_client.scan_iter("subtasks:*"):
+        for key in redis_client.scan_iter(f"subtasks:{task_id}:*"):
+            redis_client.delete(key)
+
+        redis_client.delete(f"task:{task_id}")
+
+        for key in redis_client.scan_iter("tasks:*"):
             redis_client.delete(key)
     except Exception:
         pass

@@ -32,14 +32,18 @@ def create_task(
         redis_client.setex(
             f"task:{result['id']}",
             300,
-            json.dumps(TaskResponse.model_validate(result).model_dump()),
+            json.dumps(TaskResponse.model_validate(result).model_dump(mode="json")),
         )
     except Exception:
         pass
 
-    for key in redis_client.scan_iter("tasks:*"):
-        redis_client.delete(key)
-    redis_client.delete("tasks:sprints")
+    try:
+        for key in redis_client.scan_iter("tasks:*"):
+            redis_client.delete(key)
+        redis_client.delete("tasks:sprints")
+
+    except Exception:
+        pass
 
     return result
 
@@ -122,7 +126,7 @@ def get_tasks(
     # ✅ cache write
     if tasks:
         try:
-            redis_client.setex(cache_key, 180, json.dumps(response))
+            redis_client.setex(cache_key, 180, json.dumps(response, default=str))
         except Exception:
             pass
 
@@ -181,7 +185,35 @@ def get_kanban_tasks(
     ),
     db: Session = Depends(get_db),
 ):
-    return services_task.get_kanban_tasks(
+    def normalize(value):
+        if value is None or value == "":
+            return "null"
+        return str(value).strip().lower()
+
+    cache_key = (
+        f"tasks:kanban:"
+        f"{normalize(sprint)}:"
+        f"{normalize(user_id)}:"
+        f"{normalize(search)}:"
+        f"{sort_by}:"
+        f"{sort_order}:"
+        f"{backlog_page}:{todo_page}:{in_progress_page}:"
+        f"{in_review_page}:{qa_page}:{completed_page}"
+    )
+
+    cached_data = None
+    try:
+        cached_data = redis_client.get(cache_key)
+    except Exception:
+        pass
+
+    if cached_data:
+        try:
+            return json.loads(cached_data)
+        except Exception:
+            redis_client.delete(cache_key)
+
+    result = services_task.get_kanban_tasks(
         db=db,
         sprint=sprint,
         user_id=user_id,
@@ -195,6 +227,13 @@ def get_kanban_tasks(
         qa_page=qa_page,
         completed_page=completed_page,
     )
+
+    try:
+        redis_client.setex(cache_key, 180, json.dumps(result, default=str))
+    except Exception:
+        pass
+
+    return result
 
 
 @router.get("/{task_id}", response_model=TaskResponse)
@@ -222,7 +261,7 @@ def get_task(task_id: int, db: Session = Depends(get_db)):
         redis_client.setex(
             cache_key,
             300,
-            json.dumps(TaskResponse.model_validate(task).model_dump()),
+            json.dumps(TaskResponse.model_validate(task).model_dump(mode="json")),
         )
     except Exception:
         pass
@@ -245,7 +284,7 @@ def update_task(
         redis_client.setex(
             f"task:{task_id}",
             300,
-            json.dumps(TaskResponse.model_validate(result).model_dump()),
+            json.dumps(TaskResponse.model_validate(result).model_dump(mode="json")),
         )
     except Exception:
         pass

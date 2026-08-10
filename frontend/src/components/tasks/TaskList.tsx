@@ -118,7 +118,7 @@ export default function TaskList({
           : mergeUnique(prev.completed, data.completed.tasks),
     }));
     setIsRefreshingBoard(false);
-  }, [data, columnPages]);
+  }, [data, columnPages, isFetching]);
 
   useEffect(() => {
     setIsRefreshingBoard(true);
@@ -132,14 +132,14 @@ export default function TaskList({
       completed: 1,
     });
 
-    setColumnData({
-      backlog: [],
-      todo: [],
-      in_progress: [],
-      in_review: [],
-      qa: [],
-      completed: [],
-    });
+    // setColumnData({
+    //   backlog: [],
+    //   todo: [],
+    //   in_progress: [],
+    //   in_review: [],
+    //   qa: [],
+    //   completed: [],
+    // });
   }, [filters, sort]);
 
   // Error handling

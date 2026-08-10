@@ -30,6 +30,8 @@ def create_task_comment(db: Session, task_id: int, data):
     db.refresh(comment)
     try:
         redis_client.delete(f"task:{task_id}")
+        for key in redis_client.scan_iter("tasks:*"):
+            redis_client.delete(key)
     except Exception:
         pass
 
@@ -78,6 +80,10 @@ def create_subtask_comment(db: Session, subtask_id: int, data):
     try:
         redis_client.delete(f"task:{subtask.task_id}")
         redis_client.delete(f"subtask:{subtask_id}")
+        for key in redis_client.scan_iter(f"subtasks:{subtask.task_id}:*"):
+            redis_client.delete(key)
+        for key in redis_client.scan_iter("tasks:*"):
+            redis_client.delete(key)
     except Exception:
         pass
 
