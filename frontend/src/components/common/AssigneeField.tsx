@@ -110,7 +110,10 @@ export default function AssigneeField({
             key={user.id}
             label={user.username}
             size="small"
-            onDelete={() => handleRemoveUser(user.id)}
+            onDelete={
+           disabled? undefined :   () => handleRemoveUser(user.id)
+
+            }
             deleteIcon={!disabled ? <CloseIcon /> : undefined}
           />
         ))}

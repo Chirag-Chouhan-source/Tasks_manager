@@ -9,6 +9,8 @@ from app.schemas.schemas_subtasks import (
     SubTaskListResponse,
     SubTaskResponse,
     SubTaskUpdate,
+    SubTaskBulkDeleteResponse,
+    SubTaskBulkDelete,
 )
 from app.services import services_subtask
 from fastapi import APIRouter, Depends, Query
@@ -189,6 +191,31 @@ def update_subtask(
     # ✅ invalidate list cache
     try:
         for key in redis_client.scan_iter("subtasks:*"):
+            redis_client.delete(key)
+    except Exception:
+        pass
+
+    return result
+
+
+@router.delete("/subtasks/bulk", response_model=SubTaskBulkDeleteResponse)
+def delete_subtasks_bulk(
+    payload: SubTaskBulkDelete,
+    db: session = Depends(get_db),
+    current_user=Depends(require_permission("subtask.delete")),
+):
+
+    result = services_subtask.delete_subtasks_bulk(
+        db,
+        task_id=payload.task_id,
+        ids=payload.ids,
+    )
+
+    try:
+        for subtask_id in result["deleted_ids"]:
+            redis_client.delete(f"subtask:{subtask_id}")
+
+        for key in redis_client.scan_iter(f"subtasks:{payload.task_id}:*"):
             redis_client.delete(key)
     except Exception:
         pass

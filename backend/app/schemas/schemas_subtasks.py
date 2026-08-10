@@ -46,3 +46,13 @@ class SubTaskListResponse(BaseModel):
     page: int
     page_size: int
     results: list[SubTaskResponse]
+
+
+class SubTaskBulkDelete(BaseModel):
+    task_id: int
+    ids: List[int] = Field(..., min_length=1)
+
+
+class SubTaskBulkDeleteResponse(BaseModel):
+    message: str
+    deleted_ids: List[int]

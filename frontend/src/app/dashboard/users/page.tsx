@@ -231,7 +231,7 @@ export default function UsersPage() {
                         <Box
                           sx={{
                             display: "flex",
-                            gap: 5,
+                            gap: 1,
                             flexWrap: "wrap",
                           }}
                         >

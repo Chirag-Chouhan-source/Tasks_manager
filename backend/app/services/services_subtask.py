@@ -341,3 +341,32 @@ def delete_subtask(db: Session, subtask_id: int):
         raise HTTPException(status_code=500, detail="Error deleting subtask")
 
     return {"message": "Subtask deleted successfully"}
+
+
+def delete_subtasks_bulk(db: Session, task_id: int, ids: list[int]):
+    subtasks = (
+        db.query(SubTask)
+        .filter(
+            SubTask.task_id == task_id,
+            SubTask.id.in_(ids),
+        )
+        .all()
+    )
+
+    if not subtasks:
+        raise HTTPException(status_code=404, detail="No Subtasks found to delete")
+
+    deleted_ids = [subtask.id for subtask in subtasks]
+
+    try:
+        for subtask in subtasks:
+            db.delete(subtask)
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Error deleting subtasks")
+
+    return {
+        "message": f"{len(deleted_ids)} Subtasks deleted successfully",
+        "deleted_ids": deleted_ids,
+    }

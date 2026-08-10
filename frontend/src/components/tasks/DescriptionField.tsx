@@ -69,7 +69,11 @@ export default function DescriptionField({
         cursor: disabled ? "default" : "pointer",
 
         "&:hover": {
-          backgroundColor: !isEditing ? "#f3f4f6" : "#fff",
+          backgroundColor: disabled
+            ? undefined
+            : !isEditing
+              ? "#f3f4f6"
+              : "#fff",
         },
       }}
       onClick={() => {
@@ -84,7 +88,8 @@ export default function DescriptionField({
             color: description ? "inherit" : "#6b7280",
           }}
         >
-          {description || "Add a description..."}
+          {description ||
+            (disabled ? "No description" : "Add a description...")}
         </Typography>
       ) : (
         <TextField

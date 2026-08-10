@@ -2,10 +2,10 @@
 
 import Header from "@/components/layouts/Header";
 import Sidebar from "@/components/layouts/SideBar";
+import UILoader from "@/components/common/Loader";
 import { Box } from "@mui/material";
-
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function DashboardLayout({
   children,
@@ -13,40 +13,31 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const [isNavigating, setIsNavigating] = useState(false);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("access_token");
-
-    if (!accessToken) {
-      router.push("/login");
-    }
+    if (!accessToken) router.push("/login");
   }, [router]);
 
+  // Route finished → hide loader
+  useEffect(() => {
+    setIsNavigating(false);
+  }, [pathname]);
+
   return (
-    <Box
-      sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* HEADER */}
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Header />
 
-      {/* MAIN */}
       <Box className="dashboard-main">
-        {/* SIDEBAR */}
-        <Sidebar />
+        <Sidebar onNavigateStart={() => setIsNavigating(true)} />
 
-        {/* CONTENT */}
         <Box
           className="dashboard-content"
-          sx={{
-            flex: 1,
-            overflowY: "auto",
-          }}
+          sx={{ flex: 1, overflowY: "auto", position: "relative" }}
         >
-          {children}
+          {isNavigating ? <UILoader type="full" text="Loading..." /> : children}
         </Box>
       </Box>
     </Box>

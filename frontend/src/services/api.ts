@@ -148,6 +148,48 @@ export const api = createApi({
       ],
     }),
 
+    getKanbanTasks: builder.query<any, any>({
+      query: (filters) => {
+        const params = new URLSearchParams();
+        if (filters?.search) {
+          params.append("search", filters.search);
+        }
+        if (filters?.sprint) {
+          params.append("sprint", filters.sprint);
+        }
+        if (filters?.user_id) {
+          params.append("user_id", filters.user_id);
+        }
+        if (filters?.sort_by) {
+          params.append("sort_by", filters.sort_by);
+        }
+        if (filters?.sort_order) {
+          params.append("sort_order", filters.sort_order);
+        }
+        if (filters?.backlog_page) {
+          params.append("backlog_page", filters.backlog_page);
+        }
+        if (filters?.todo_page) {
+          params.append("todo_page", filters.todo_page);
+        }
+        if (filters?.in_progress_page) {
+          params.append("in_progress_page", filters.in_progress_page);
+        }
+        if (filters?.in_review_page) {
+          params.append("in_review_page", filters.in_review_page);
+        }
+        if (filters?.qa_page) {
+          params.append("qa_page", filters.qa_page);
+        }
+        if (filters?.completed_page) {
+          params.append("completed_page", filters.completed_page);
+        }
+        return `/task1/kanban?${params.toString()}`;
+      },
+
+      providesTags: ["Tasks"],
+    }),
+
     // Subtasks
 
     getSubtasks: builder.query<any, any>({
@@ -214,46 +256,13 @@ export const api = createApi({
       invalidatesTags: ["Subtasks", "Tasks"],
     }),
 
-    getKanbanTasks: builder.query<any, any>({
-      query: (filters) => {
-        const params = new URLSearchParams();
-        if (filters?.search) {
-          params.append("search", filters.search);
-        }
-        if (filters?.sprint) {
-          params.append("sprint", filters.sprint);
-        }
-        if (filters?.user_id) {
-          params.append("user_id", filters.user_id);
-        }
-        if (filters?.sort_by) {
-          params.append("sort_by", filters.sort_by);
-        }
-        if (filters?.sort_order) {
-          params.append("sort_order", filters.sort_order);
-        }
-        if (filters?.backlog_page) {
-          params.append("backlog_page", filters.backlog_page);
-        }
-        if (filters?.todo_page) {
-          params.append("todo_page", filters.todo_page);
-        }
-        if (filters?.in_progress_page) {
-          params.append("in_progress_page", filters.in_progress_page);
-        }
-        if (filters?.in_review_page) {
-          params.append("in_review_page", filters.in_review_page);
-        }
-        if (filters?.qa_page) {
-          params.append("qa_page", filters.qa_page);
-        }
-        if (filters?.completed_page) {
-          params.append("completed_page", filters.completed_page);
-        }
-        return `/task1/kanban?${params.toString()}`;
-      },
-
-      providesTags: ["Tasks"],
+    bulkDeleteSubtasks: builder.mutation({
+      query: (body: { task_id: number; ids: number[] }) => ({
+        url: "/subtasks/bulk",
+        method: "DELETE",
+        body,
+      }),
+      invalidatesTags: ["Subtasks", "Tasks"],
     }),
 
     // Comments
@@ -391,6 +400,7 @@ export const {
   useCreateSubtaskMutation,
   useUpdateSubtaskMutation,
   useDeleteSubtaskMutation,
+  useBulkDeleteSubtasksMutation,
 
   //comments
   useAddTaskCommentMutation,

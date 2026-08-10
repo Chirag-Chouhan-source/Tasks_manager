@@ -12,7 +12,11 @@ import { useGetCurrentUserQuery } from "@/services/api";
 import { CurrentUser } from "@/types";
 import { hasPermission } from "@/utils/permission";
 
-export default function Sidebar() {
+type Props = {
+  onNavigateStart: () => void;
+};
+
+export default function Sidebar({ onNavigateStart }: Props) {
   // Navigation
   const pathname = usePathname();
 
@@ -67,6 +71,11 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               style={{ textDecoration: "none" }}
+              onClick={() => {
+                if (pathname !== item.href) {
+                  onNavigateStart?.();
+                }
+              }}
             >
               <Box
                 className="sidebar-item"
