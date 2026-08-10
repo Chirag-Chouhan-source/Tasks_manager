@@ -16,7 +16,11 @@ import TuneIcon from "@mui/icons-material/Tune";
 import Popover from "@mui/material/Popover";
 
 import { STATUS_OPTIONS } from "@/constants/status";
-import { useGetSprintsQuery, useGetUsersQuery } from "@/services/api";
+import {
+  useGetSprintsQuery,
+  useGetUsersQuery,
+  useGetTasksQuery,
+} from "@/services/api";
 import { User } from "@/types";
 
 type Props = {
@@ -51,14 +55,37 @@ export default function FilterMenu({
     ...(type === "task" ? { sprint: "" } : {}),
   };
 
-  // DataFetching
-  const { data: users } = useGetUsersQuery();
   const { data: sprints } = useGetSprintsQuery(undefined, {
     skip: type !== "task",
   });
 
-  // Filter State
   const [localFilters, setLocalFilters] = useState(filters || defaultFilters);
+  const sprint = localFilters.sprint || "";
+
+  const { data: allUsers } = useGetUsersQuery(undefined, {
+    skip: !!sprint,
+  });
+
+  const { data: sprintTasksData } = useGetTasksQuery(
+    {
+      sprint,
+      page: 1,
+      page_size: 100,
+    },
+    { skip: !sprint },
+  );
+
+  const users = sprint
+    ? Array.from(
+        new Map(
+          (sprintTasksData?.results || [])
+            .flatMap((task: any) => task.users || [])
+            .map((user: any) => [user.id, user]),
+        ).values(),
+      )
+    : allUsers;
+
+  // Filter State
 
   useEffect(() => {
     setLocalFilters(filters || defaultFilters);
@@ -71,6 +98,10 @@ export default function FilterMenu({
       ...localFilters,
       [key]: value,
     };
+
+    if (key === "sprint") {
+      updated.user_id = "";
+    }
 
     setLocalFilters(updated);
     onChange(updated);
@@ -149,9 +180,9 @@ export default function FilterMenu({
                 >
                   <MenuItem value="">All</MenuItem>
 
-                  {sprints?.map((sprint: string) => (
-                    <MenuItem key={sprint} value={sprint}>
-                      {sprint}
+                  {sprints?.map((s) => (
+                    <MenuItem key={s} value={s}>
+                      {s}
                     </MenuItem>
                   ))}
                 </Select>

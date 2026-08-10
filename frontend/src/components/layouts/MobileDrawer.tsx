@@ -11,14 +11,18 @@ import DashboardIcon from "@mui/icons-material/DashboardOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import PeopleIcon from "@mui/icons-material/PeopleOutline";
 
-export default function MobileDrawer() {
-  // Navigation
-  const pathname = usePathname();
+import { useGetCurrentUserQuery } from "@/services/api";
+import { CurrentUser } from "@/types";
+import { hasPermission } from "@/utils/permission";
 
-  // Drawer State
+export default function MobileDrawer() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // Navigation Items
+  const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
+    data?: CurrentUser;
+  };
+
   const items = [
     {
       label: "Dashboard",
@@ -30,12 +34,15 @@ export default function MobileDrawer() {
       href: "/dashboard/tasks",
       icon: <TaskIcon />,
     },
-    {
+  ];
+
+  if (hasPermission(currentUser?.permissions, "user.view")) {
+    items.push({
       label: "Users",
       href: "/dashboard/users",
       icon: <PeopleIcon />,
-    },
-  ];
+    });
+  }
 
   return (
     <>

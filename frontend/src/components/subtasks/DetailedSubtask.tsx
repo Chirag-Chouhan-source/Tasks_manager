@@ -104,7 +104,7 @@ export default function DetailedSubtask({ subtask }: Props) {
       setIsEditingTitle(false);
     } catch (err: any) {
       let message =
-        err?.data?.detail || err?.error || "Subtask title must be unique";
+        err?.data?.message || err?.error || "Subtask title must be unique";
 
       if (typeof message === "string") {
         message = message.replace(/^\d+:\s*/, "").trim();
@@ -134,7 +134,7 @@ export default function DetailedSubtask({ subtask }: Props) {
       );
       router.refresh();
     } catch (err: any) {
-      let message = err?.data?.detail || "Cannot delete subtask";
+      let message = err?.data?.message || "Cannot delete subtask";
 
       if (typeof message === "string") {
         message = message.replace(/^\d+:\s*/, "").trim();

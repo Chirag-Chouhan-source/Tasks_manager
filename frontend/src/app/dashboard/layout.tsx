@@ -26,25 +26,38 @@ export default function DashboardLayout({
 
   useEffect(() => {
     if (!hasMounted) return;
-    if (!hasToken()) router.push("/login");
+    if (!hasToken()) router.replace("/login");
   }, [hasMounted, router]);
 
   useEffect(() => {
     setIsNavigating(false);
   }, [pathname]);
 
-  const { data: currentUser, isLoading: isUserLoading } =
-    useGetCurrentUserQuery(undefined, {
-      skip: !hasMounted || !hasToken(),
-    });
+  const {
+    data: currentUser,
+    isLoading: isUserLoading,
+    isError: isUserError,
+  } = useGetCurrentUserQuery(undefined, {
+    skip: !hasMounted || !hasToken(),
+  });
 
-  // Same on server + first client paint → no hydration mismatch
-  if (!hasMounted || isUserLoading || !currentUser) {
+  useEffect(() => {
+    if (!hasMounted) return;
+    if (isUserError) {
+      router.replace("/login");
+    }
+  }, [hasMounted, isUserError, router]);
+
+  if (!hasMounted || isUserLoading || (!currentUser && !isUserError)) {
     return (
       <Box sx={{ height: "100vh", width: "100%" }}>
         <UILoader type="full" text="Loading..." />
       </Box>
     );
+  }
+
+  if (isUserError || !currentUser) {
+    return null;
   }
 
   return (

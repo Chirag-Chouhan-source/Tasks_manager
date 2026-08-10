@@ -120,7 +120,7 @@ export default function CreateTaskDialog({
 
       onClose();
     } catch (err: any) {
-      let message = err?.data?.detail || "Failed to create task";
+      let message = err?.data?.message || "Failed to create task";
 
       if (Array.isArray(message)) message = message[0];
 

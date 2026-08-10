@@ -166,7 +166,27 @@ def get_subtasks(
                 ],
                 "comments": {
                     "count": len(subtask.comments),
-                    "data": subtask.comments,
+                    "data": [
+                        {
+                            "id": comment.id,
+                            "content": comment.content,
+                            "task_id": comment.task_id,
+                            "subtask_id": comment.subtask_id,
+                            "created_at": comment.created_at,
+                            "updated_at": comment.updated_at,
+                            "user": (
+                                {
+                                    "id": comment.user.id,
+                                    "username": comment.user.username,
+                                    "email": comment.user.email,
+                                    "team_name": comment.user.team_name,
+                                }
+                                if comment.user
+                                else None
+                            ),
+                        }
+                        for comment in subtask.comments
+                    ],
                 },
             }
         )
@@ -199,7 +219,27 @@ def get_subtask_by_id(db: Session, subtask_id: int):
         ],
         "comments": {
             "count": len(subtask.comments),
-            "data": subtask.comments,
+            "data": [
+                {
+                    "id": comment.id,
+                    "content": comment.content,
+                    "task_id": comment.task_id,
+                    "subtask_id": comment.subtask_id,
+                    "created_at": comment.created_at,
+                    "updated_at": comment.updated_at,
+                    "user": (
+                        {
+                            "id": comment.user.id,
+                            "username": comment.user.username,
+                            "email": comment.user.email,
+                            "team_name": comment.user.team_name,
+                        }
+                        if comment.user
+                        else None
+                    ),
+                }
+                for comment in subtask.comments
+            ],
         },
     }
 
@@ -320,7 +360,27 @@ def update_subtask(db: Session, subtask_id: int, subtask_data):
         ],
         "comments": {
             "count": len(subtask.comments),
-            "data": subtask.comments[:1],
+            "data": [
+                {
+                    "id": comment.id,
+                    "content": comment.content,
+                    "task_id": comment.task_id,
+                    "subtask_id": comment.subtask_id,
+                    "created_at": comment.created_at,
+                    "updated_at": comment.updated_at,
+                    "user": (
+                        {
+                            "id": comment.user.id,
+                            "username": comment.user.username,
+                            "email": comment.user.email,
+                            "team_name": comment.user.team_name,
+                        }
+                        if comment.user
+                        else None
+                    ),
+                }
+                for comment in subtask.comments[:1]
+            ],
         },
     }
 

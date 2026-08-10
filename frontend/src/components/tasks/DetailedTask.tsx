@@ -93,7 +93,7 @@ export default function DetailedTask({ task }: Props) {
       setTitleError("");
       setIsEditingTitle(false);
     } catch (err: any) {
-      setTitleError(err?.data?.detail || "Task title must be unique");
+      setTitleError(err?.data?.message || "Task title must be unique");
       setTimeout(() => setTitleError(""), 3000);
     }
   };
@@ -147,7 +147,7 @@ export default function DetailedTask({ task }: Props) {
       setIsDeleting(false);
 
       let message =
-        err?.data?.detail || "Cannot delete task because it has subtasks";
+        err?.data?.message || "Cannot delete task because it has subtasks";
 
       if (typeof message === "string") {
         message = message.replace(/^\d+:\s*/, "").trim();

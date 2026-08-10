@@ -22,8 +22,11 @@ export default function StatusSnackbar({
   return (
     <Snackbar
       open={open}
-      autoHideDuration={2500} // ✅ auto disappear
-      onClose={onClose}
+      autoHideDuration={3000}
+      onClose={(_event, reason) => {
+        if (reason === "clickaway") return;
+        onClose();
+      }}
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
       <Box

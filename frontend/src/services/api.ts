@@ -22,7 +22,14 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
   let result = await baseQuery(args, api, extraOptions);
 
-  if (result.error?.status === 401) {
+  const url = typeof args === "string" ? args : args?.url;
+  const isAuthEndpoint =
+    typeof url === "string" &&
+    (url.includes("/auth/login") ||
+      url.includes("/auth/register") ||
+      url.includes("/auth/refresh"));
+
+  if (result.error?.status === 401 && !isAuthEndpoint) {
     const refreshToken = localStorage.getItem("refresh_token");
 
     if (!refreshToken) {

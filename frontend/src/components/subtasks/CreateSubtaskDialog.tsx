@@ -85,7 +85,7 @@ export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
 
       onClose();
     } catch (err: any) {
-      let message = err?.data?.detail || "Failed to create subtask";
+      let message = err?.data?.message || "Failed to create subtask";
 
       if (Array.isArray(message)) {
         message = message[0];

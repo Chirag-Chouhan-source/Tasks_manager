@@ -155,7 +155,7 @@ export default function SubtaskList({
         message: "Subtask deleted successfully ",
       });
     } catch (err: any) {
-      let message = err?.data?.detail || "Cannot delete subtask";
+      let message = err?.data?.message || "Cannot delete subtask";
 
       if (typeof message === "string") {
         message = message.replace(/^\d+:\s*/, "").trim();
@@ -183,7 +183,7 @@ export default function SubtaskList({
         message: `${selectedIds.length} subtasks deleted successfully`,
       });
     } catch (err: any) {
-      let message = err?.data?.detail || "Cannot delete subtasks";
+      let message = err?.data?.message || "Cannot delete subtasks";
 
       if (typeof message === "string") {
         message = message.replace(/^\d+:\s*/, "").trim();

@@ -123,7 +123,17 @@ export default function LoginPage() {
 
   // Loading State
   if (hasToken() && isUserLoading) {
-    return <CircularProgress />;
+    return (
+      <>
+        <CircularProgress />
+        <StatusSnackbar
+          open={snackbar.open}
+          message={snackbar.message}
+          severity={snackbar.severity}
+          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+        />
+      </>
+    );
   }
 
   return (

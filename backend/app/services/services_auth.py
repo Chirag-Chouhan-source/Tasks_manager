@@ -10,6 +10,7 @@ from app.core.validators import (
     validate_username,
 )
 from app.models.model_users import User
+from app.models.model_role import Role
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
@@ -42,6 +43,10 @@ def create_user(db: Session, email: str, username: str, password: str):
 
     # ✅ 3. Create user object
     new_user = User(email=email, username=username, password_hash=password_hash)
+
+    default_role = db.query(Role).filter(Role.name == "Developer").first()
+    if default_role:
+        new_user.roles = [default_role]
 
     # ✅ 4. Save to DB
     db.add(new_user)

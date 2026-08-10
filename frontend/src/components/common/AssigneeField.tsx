@@ -1,4 +1,11 @@
-import { Box, Chip, IconButton, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  ClickAwayListener,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 
 import AddIcon from "@mui/icons-material/Add";
@@ -40,7 +47,7 @@ export default function AssigneeField({
 
   // Dropdown State
   const [isOpen, setIsOpen] = useState(false);
-  const [closeTimer, setCloseTimer] = useState<any>(null);
+  // const [closeTimer, setCloseTimer] = useState<any>(null);
 
   // Assignee Action
   const updateUsers = async (updatedUsers: User[]) => {
@@ -80,107 +87,99 @@ export default function AssigneeField({
   };
 
   return (
-    <Box
-      sx={{ position: "relative" }}
-      onMouseLeave={() => {
-        const timer = setTimeout(() => {
-          setIsOpen(false);
-        }, 800);
-
-        setCloseTimer(timer);
-      }}
-      onMouseEnter={() => {
-        if (closeTimer) {
-          clearTimeout(closeTimer);
-        }
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          gap: 1,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        {!selectedUsers.length && <Typography>No assignee</Typography>}
-
-        {selectedUsers.map((user: User) => (
-          <Chip
-            key={user.id}
-            label={user.username}
-            size="small"
-            onDelete={
-           disabled? undefined :   () => handleRemoveUser(user.id)
-
-            }
-            deleteIcon={!disabled ? <CloseIcon /> : undefined}
-          />
-        ))}
-        {!disabled && (
-          <IconButton
-            size="small"
-            onClick={() => setIsOpen((prev) => !prev)}
-            sx={{
-              "&:hover": {
-                backgroundColor: "#f3f4f6",
-              },
-            }}
-          >
-            <AddIcon fontSize="small" />
-          </IconButton>
-        )}
-      </Box>
-
-      {!disabled && isOpen && (
-        <Paper
+    <ClickAwayListener onClickAway={() => setIsOpen(false)}>
+      <Box sx={{ position: "relative" }}>
+        <Box
           sx={{
-            position: "absolute",
-            top: "100%",
-            mt: 1,
-            width: 220,
-            zIndex: 10,
-            border: "1px solid #e5e7eb",
+            display: "flex",
+            gap: 1,
+            flexWrap: "wrap",
+            alignItems: "center",
           }}
         >
-          {users.map((user: any) => {
-            const isSelected = selectedUsers.some((u) => u.id === user.id);
+          {!selectedUsers.length && <Typography>No assignee</Typography>}
 
-            return (
-              <Box
-                key={user.id}
-                onClick={() => {
-                  if (isSelected) {
-                    handleRemoveUser(user.id);
-                  } else {
-                    handleAddUser(user);
-                  }
-                }}
-                sx={{
-                  px: 1.5,
-                  py: 1,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+          {selectedUsers.map((user: User) => (
+            <Chip
+              key={user.id}
+              label={user.username}
+              size="small"
+              onDelete={disabled ? undefined : () => handleRemoveUser(user.id)}
+              deleteIcon={!disabled ? <CloseIcon /> : undefined}
+            />
+          ))}
 
-                  backgroundColor: isSelected ? "#e5e7eb" : "transparent",
+          {!disabled && (
+            <IconButton
+              size="small"
+              onClick={() => setIsOpen((prev) => !prev)}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#f3f4f6",
+                },
+              }}
+            >
+              <AddIcon fontSize="small" />
+            </IconButton>
+          )}
+        </Box>
 
-                  fontWeight: isSelected ? 600 : 400,
-
-                  color: isSelected ? "#111827" : "inherit",
-
-                  "&:hover": {
-                    backgroundColor: "#f3f4f6",
-                  },
-                }}
-              >
-                {user.username}
+        {!disabled && isOpen && (
+          <Paper
+            elevation={3}
+            sx={{
+              position: "absolute",
+              top: "100%",
+              mt: 1,
+              width: 220,
+              maxHeight: 240,
+              overflowY: "auto",
+              zIndex: 10,
+              border: "1px solid #e5e7eb",
+              borderRadius: 2,
+            }}
+          >
+            {users.length === 0 && (
+              <Box sx={{ px: 1.5, py: 1.5, color: "#6b7280", fontSize: 13 }}>
+                No users found
               </Box>
-            );
-          })}
-        </Paper>
-      )}
-    </Box>
+            )}
+
+            {users.map((user: any) => {
+              const isSelected = selectedUsers.some((u) => u.id === user.id);
+
+              return (
+                <Box
+                  key={user.id}
+                  onClick={() => {
+                    if (isSelected) {
+                      handleRemoveUser(user.id);
+                    } else {
+                      handleAddUser(user);
+                    }
+                  }}
+                  sx={{
+                    px: 1.5,
+                    py: 1,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    backgroundColor: isSelected ? "#e5e7eb" : "transparent",
+                    fontWeight: isSelected ? 600 : 400,
+                    color: isSelected ? "#111827" : "inherit",
+                    "&:hover": {
+                      backgroundColor: "#f3f4f6",
+                    },
+                  }}
+                >
+                  {user.username}
+                </Box>
+              );
+            })}
+          </Paper>
+        )}
+      </Box>
+    </ClickAwayListener>
   );
 }
