@@ -141,7 +141,6 @@ def update_me(
     payload,
 ):
     validate_username(payload.username)
-    validate_email(payload.email)
 
     username_exists = (
         db.query(User)
@@ -158,34 +157,17 @@ def update_me(
             detail="Username already exists",
         )
 
-    email_exists = (
-        db.query(User)
-        .filter(
-            User.email == payload.email,
-            User.id != current_user.id,
-        )
-        .first()
-    )
-
-    if email_exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already exists",
-        )
-
     current_user.username = payload.username.strip()
-    current_user.email = payload.email.strip()
+    # do not touch current_user.email
 
     try:
         db.commit()
-
     except IntegrityError:
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username or email already exists",
+            detail="Username already exists",
         )
-
     except Exception:
         db.rollback()
         raise HTTPException(

@@ -164,22 +164,24 @@ export default function TaskList({
           height: "100%",
           overflowY: "auto",
           pr: 1,
-          display: "flex",
-          flexWrap: "wrap",
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(auto-fill, minmax(260px, 1fr))",
+          },
           gap: 2,
-          alignContent: "flex-start",
+          alignContent: "start",
+          alignItems: "start",
         }}
       >
         {tasks.map((task: Task) => (
           <Box
             key={task.id}
             sx={{
-              width: {
-                xs: "100%",
-                sm: "280px",
+              "& .MuiCard-root": {
+                height: "auto",
+                mb: 0,
               },
-              flexGrow: 0,
-              flexShrink: 0,
             }}
           >
             <TaskCard task={task} onClick={() => onTaskClick(task)} />
@@ -193,10 +195,19 @@ export default function TaskList({
     return <UILoader type="task" text="Loading board..." />;
   }
 
+  const hasActiveFilters = Boolean(
+    filters?.sprint || filters?.user_id || filters?.search,
+  );
+  const totalBoardTasks = columns.reduce(
+    (sum, col) => sum + (data?.[col.key]?.count ?? 0),
+    0,
+  );
+
   return (
     <Box
       className="kanban-container"
       sx={{
+        position: "relative",
         display: "flex",
         gap: 2,
         height: "100%",
@@ -204,6 +215,30 @@ export default function TaskList({
         alignItems: "flex-start",
       }}
     >
+      {hasActiveFilters && totalBoardTasks === 0 && (
+        <Box
+          sx={{
+            position: "absolute",
+            left: "50%",
+            top: 16,
+            transform: "translateX(-50%)",
+            zIndex: 3,
+            px: 2.5,
+            py: 1.25,
+            borderRadius: 2,
+            bgcolor: "#ffffff",
+            border: "1px solid #e2e8f0",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+            color: "#64748b",
+            fontSize: 14,
+            fontWeight: 500,
+            whiteSpace: "nowrap",
+          }}
+        >
+          No tasks match your filters
+        </Box>
+      )}
+
       {columns.map((col) => {
         const colTasks = columnData[col.key] ?? [];
         const totalCount = data?.[col.key]?.count ?? 0;
@@ -270,7 +305,20 @@ export default function TaskList({
             {/* CONTENT */}
             <Box sx={{ px: 1, pt: 2, pb: 2 }}>
               {colTasks.length === 0 ? (
-                <Box>No tasks</Box>
+                <Box
+                  sx={{
+                    py: 3,
+                    px: 1,
+                    textAlign: "center",
+                    color: "#94a3b8",
+                    fontSize: 13,
+                    border: "1px dashed #cbd5e1",
+                    borderRadius: 2,
+                    backgroundColor: "#f8fafc",
+                  }}
+                >
+                  {hasActiveFilters ? "No matching tasks" : "No tasks"}
+                </Box>
               ) : (
                 <Box className="kanban-tasks">
                   {colTasks.map((task: Task) => (

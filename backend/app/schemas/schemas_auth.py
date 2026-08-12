@@ -20,7 +20,6 @@ class LoginRequest(BaseModel):
 
 class UpdateMeRequest(BaseModel):
     username: str
-    email: EmailStr
 
 
 class ChangePasswordRequest(BaseModel):

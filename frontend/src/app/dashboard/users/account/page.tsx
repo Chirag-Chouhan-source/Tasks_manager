@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Chip,
+  IconButton,
   TextField,
   Typography,
 } from "@mui/material";
@@ -13,6 +14,7 @@ import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRound
 import GroupsRoundedIcon from "@mui/icons-material/GroupsRounded";
 import PersonOutlineRoundedIcon from "@mui/icons-material/PersonOutlineRounded";
 import SecurityRoundedIcon from "@mui/icons-material/SecurityRounded";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 
 import { useEffect, useState } from "react";
 
@@ -32,21 +34,20 @@ export default function AccountPage() {
 
   // Profile Editing
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     if (user) {
       setUsername(user.username);
-      setEmail(user.email);
     }
   }, [user]);
 
   const handleSave = async () => {
+    if (!user) return;
+
     try {
       await updateMe({
         username,
-        email,
       }).unwrap();
       setIsEditing(false);
 
@@ -78,7 +79,7 @@ export default function AccountPage() {
   if (!user) return null;
 
   // Derived Values
-  const hasChanges = username !== user.username || email !== user.email;
+  const hasChanges = username !== user.username;
   const roleName = user.roles?.[0] || "No Role";
   const roleConfig = ROLE_CONFIG[roleName] ?? ROLE_CONFIG.default;
 
@@ -246,95 +247,81 @@ export default function AccountPage() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
               alignItems: "center",
+              gap: 1,
               mb: 3,
             }}
           >
+            <PersonOutlineRoundedIcon color="primary" />
+            <Typography fontWeight={700}>Profile</Typography>
+          </Box>
+
+          <Typography variant="body2" color="text.secondary">
+            Username
+          </Typography>
+
+          {!isEditing ? (
             <Box
               sx={{
                 display: "flex",
                 alignItems: "center",
-                gap: 1,
+                gap: 0.5,
+                mb: 3,
               }}
             >
-              <PersonOutlineRoundedIcon color="primary" />
-
-              <Typography fontWeight={700}>Profile</Typography>
-            </Box>
-            {!isEditing && (
-              <Button
+              <Typography fontWeight={600}>{user.username}</Typography>
+              <IconButton
                 size="small"
-                onClick={() => setIsEditing(true)}
-                sx={{
-                  textTransform: "none",
+                onClick={() => {
+                  setUsername(user.username);
+                  setIsEditing(true);
                 }}
+                aria-label="Edit username"
               >
-                Edit
-              </Button>
-            )}
-          </Box>
-          {!isEditing ? (
-            <>
-              <Typography variant="body2" color="text.secondary">
-                Username
-              </Typography>
-
-              <Typography fontWeight={600} mb={3}>
-                {user.username}
-              </Typography>
-
-              <Typography variant="body2" color="text.secondary">
-                Email
-              </Typography>
-
-              <Typography fontWeight={600}>{user.email}</Typography>
-            </>
+                <EditOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Box>
           ) : (
-            <>
+            <Box sx={{ mb: 3 }}>
               <TextField
-                label="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 fullWidth
-                sx={{ mb: 2 }}
+                size="small"
               />
-
-              <TextField
-                label="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                fullWidth
-              />
-
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
                   gap: 1,
-                  mt: 2,
+                  mt: 1.5,
                 }}
               >
                 <Button
+                  size="small"
                   onClick={() => {
                     setUsername(user.username);
-                    setEmail(user.email);
                     setIsEditing(false);
                   }}
                 >
                   Cancel
                 </Button>
-
                 <Button
+                  size="small"
                   variant="contained"
                   onClick={handleSave}
                   disabled={!hasChanges || isLoading}
                 >
-                  {isLoading ? "Saving..." : "Save Changes"}
+                  {isLoading ? "Saving..." : "Save"}
                 </Button>
               </Box>
-            </>
+            </Box>
           )}
+
+          <Typography variant="body2" color="text.secondary">
+            Email
+          </Typography>
+          <Typography fontWeight={600}>{user.email}</Typography>
         </Box>
 
         {/* ORGANIZATION */}

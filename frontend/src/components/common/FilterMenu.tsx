@@ -60,30 +60,51 @@ export default function FilterMenu({
   });
 
   const [localFilters, setLocalFilters] = useState(filters || defaultFilters);
+
   const sprint = localFilters.sprint || "";
 
-  const { data: allUsers } = useGetUsersQuery(undefined, {
+  // Full directory when allowed (needs user.view) — only used when no sprint
+  const { data: directoryUsers } = useGetUsersQuery(undefined, {
     skip: !!sprint,
   });
 
-  const { data: sprintTasksData } = useGetTasksQuery(
-    {
-      sprint,
-      page: 1,
-      page_size: 100,
-    },
-    { skip: !sprint },
+  // Always available with task.view: assignees from tasks (scoped by sprint when set)
+  const { data: tasksForAssignees } = useGetTasksQuery({
+    ...(sprint ? { sprint } : {}),
+    page: 1,
+    page_size: 100,
+  });
+
+  const usersFromTasks: User[] = Array.from(
+    new Map<number, User>(
+      (tasksForAssignees?.results || [])
+        .flatMap((task: any) => task.users || [])
+        .filter((user: any) => user?.id != null)
+        .map((user: any) => [user.id as number, user as User]),
+    ).values(),
   );
 
-  const users = sprint
-    ? Array.from(
-        new Map(
-          (sprintTasksData?.results || [])
-            .flatMap((task: any) => task.users || [])
-            .map((user: any) => [user.id, user]),
-        ).values(),
-      )
-    : allUsers;
+  // No sprint: prefer full user directory; fall back / merge with task assignees
+  // Sprint selected: only users on that sprint's tasks
+  const users: User[] = (() => {
+    if (sprint) return usersFromTasks;
+
+    const byId = new Map<number, User>();
+
+    if (Array.isArray(directoryUsers)) {
+      for (const user of directoryUsers as User[]) {
+        byId.set(user.id, user);
+      }
+    }
+
+    for (const user of usersFromTasks) {
+      byId.set(user.id, user);
+    }
+
+    return Array.from(byId.values()).sort((a, b) =>
+      a.username.localeCompare(b.username),
+    );
+  })();
 
   // Filter State
 
@@ -200,7 +221,7 @@ export default function FilterMenu({
               >
                 <MenuItem value="">All</MenuItem>
 
-                {users?.map((user: User) => (
+                {users.map((user: User) => (
                   <MenuItem key={user.id} value={user.id}>
                     {user.username}
                   </MenuItem>

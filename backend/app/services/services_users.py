@@ -123,13 +123,6 @@ def delete_user(
             detail="User not found",
         )
 
-    # Cannot delete Root
-    if db_user.username == "Root":
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Root user cannot be deleted",
-        )
-
     # Cannot delete yourself
     if current_user.id == user_id:
         raise HTTPException(
