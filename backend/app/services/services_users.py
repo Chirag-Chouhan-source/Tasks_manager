@@ -6,6 +6,7 @@ from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from starlette import status
+from app.core.redis_client import redis_client
 
 
 def get_users(db: Session):
@@ -151,6 +152,19 @@ def delete_user(
         db.delete(db_user)
 
         db.commit()
+
+        try:
+
+            for key in redis_client.scan_iter("tasks:*"):
+                redis_client.delete(key)
+            for key in redis_client.scan_iter("task:*"):
+                redis_client.delete(key)
+            for key in redis_client.scan_iter("subtasks:*"):
+                redis_client.delete(key)
+            for key in redis_client.scan_iter("subtask:*"):
+                redis_client.delete(key)
+        except Exception:
+            pass
 
         return {
             "detail": "User deleted successfully",

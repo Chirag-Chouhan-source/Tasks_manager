@@ -144,7 +144,7 @@ export default function LoginPage() {
             {/* ✅ LEFT SIDE */}
             <Box className={styles.leftSection}>
               <Typography component="div" className={styles.brand}>
-                TaskFlow
+                DevTrack
               </Typography>
 
               <Typography component="div" className={styles.heroTitle}>

@@ -148,7 +148,7 @@ export default function RegisterPage() {
           <Paper elevation={0} className={styles.paperInner}>
             {/* ✅ LEFT SIDE */}
             <Box className={styles.leftSection}>
-              <div className={styles.brand}>TaskFlow</div>
+              <div className={styles.brand}>DevTrack</div>
 
               <div className={styles.heroTitle}>
                 Join and start organizing your work

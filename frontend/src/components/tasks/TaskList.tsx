@@ -215,7 +215,7 @@ export default function TaskList({
         alignItems: "flex-start",
       }}
     >
-      {hasActiveFilters && totalBoardTasks === 0 && (
+      {/* {hasActiveFilters && totalBoardTasks === 0 && (
         <Box
           sx={{
             position: "absolute",
@@ -237,7 +237,7 @@ export default function TaskList({
         >
           No tasks match your filters
         </Box>
-      )}
+      )} */}
 
       {columns.map((col) => {
         const colTasks = columnData[col.key] ?? [];
@@ -285,20 +285,6 @@ export default function TaskList({
                     {totalCount}
                   </Box>
                 </Box>
-
-                {canCreateTask && (
-                  <Box
-                    sx={{
-                      cursor: "pointer",
-                      px: 0.5,
-                      borderRadius: 1,
-                      "&:hover": { backgroundColor: "#e2e8f0" },
-                    }}
-                    onClick={() => onAddTask?.(col.key)}
-                  >
-                    +
-                  </Box>
-                )}
               </Box>
             </Box>
 

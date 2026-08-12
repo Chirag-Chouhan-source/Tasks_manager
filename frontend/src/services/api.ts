@@ -361,7 +361,7 @@ export const api = createApi({
         method: "DELETE",
       }),
 
-      invalidatesTags: ["Users"],
+      invalidatesTags: ["Users", "Tasks", "Task", "Subtasks"],
     }),
 
     updateUser: builder.mutation({

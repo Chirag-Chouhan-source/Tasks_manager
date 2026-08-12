@@ -1,10 +1,10 @@
-# TaskFlow — Application Documentation
+# DevTrack — Application Documentation
 
 **Document type:** System & product documentation  
-**Application:** TaskFlow (Task Management and Collaboration System)  
+**Application:** DevTrack (Task Management and Collaboration System)  
 **Architecture:** Client–server (Next.js frontend · FastAPI backend · PostgreSQL · Redis)
 
-This document describes the purpose, architecture, domain model, schema design (ERD and table catalog), modules, security model, APIs, frontend surfaces, caching behaviour, and operational setup of the TaskFlow application.
+This document describes the purpose, architecture, domain model, schema design (ERD and table catalog), modules, security model, APIs, frontend surfaces, caching behaviour, and operational setup of the DevTrack application.
 
 ---
 
@@ -31,7 +31,7 @@ This document describes the purpose, architecture, domain model, schema design (
 
 ## 1. Purpose
 
-TaskFlow is a full-stack collaboration platform for organizing engineering and delivery work. It enables teams to:
+DevTrack is a full-stack collaboration platform for organizing engineering and delivery work. It enables teams to:
 
 - Represent work as **tasks** and **subtasks**
 - Track progress through a defined **status workflow**
@@ -205,14 +205,14 @@ This section documents the logical domain, the relational schema (ERD), physical
 
 ### 5.1 Conceptual entities
 
-| Entity | Responsibility |
-|--------|----------------|
-| **User** | Account identity; assignees and comment authors |
-| **Role** | Named access profile (Admin, Manager, Developer, QA) |
-| **Permission** | Fine-grained capability string |
-| **Task** | Primary work item; sprint + status + assignees |
-| **SubTask** | Child work item under a task |
-| **Comment** | Collaboration note on a task or subtask |
+| Entity         | Responsibility                                       |
+| -------------- | ---------------------------------------------------- |
+| **User**       | Account identity; assignees and comment authors      |
+| **Role**       | Named access profile (Admin, Manager, Developer, QA) |
+| **Permission** | Fine-grained capability string                       |
+| **Task**       | Primary work item; sprint + status + assignees       |
+| **SubTask**    | Child work item under a task                         |
+| **Comment**    | Collaboration note on a task or subtask              |
 
 ### 5.2 Entity-relationship diagram (ERD)
 
@@ -299,16 +299,16 @@ erDiagram
 
 ### 5.3 Relationship cardinality
 
-| From | To | Type | Association / FK | Notes |
-|------|----|------|------------------|-------|
-| User | Role | M:N | `user_roles` | Users inherit permissions via roles |
-| Role | Permission | M:N | `role_permissions` | Seeded role-permission matrix |
-| User | Task | M:N | `user_task_association` | Task assignees |
-| User | SubTask | M:N | `user_subtask_association` | Subtask assignees |
-| Task | SubTask | 1:N | `subtasks.task_id` | Parent required |
-| Task | Comment | 1:N | `comments.task_id` | Optional XOR with subtask |
-| SubTask | Comment | 1:N | `comments.subtask_id` | Optional XOR with task |
-| User | Comment | 1:N | `comments.user_id` | Author |
+| From    | To         | Type | Association / FK           | Notes                               |
+| ------- | ---------- | ---- | -------------------------- | ----------------------------------- |
+| User    | Role       | M:N  | `user_roles`               | Users inherit permissions via roles |
+| Role    | Permission | M:N  | `role_permissions`         | Seeded role-permission matrix       |
+| User    | Task       | M:N  | `user_task_association`    | Task assignees                      |
+| User    | SubTask    | M:N  | `user_subtask_association` | Subtask assignees                   |
+| Task    | SubTask    | 1:N  | `subtasks.task_id`         | Parent required                     |
+| Task    | Comment    | 1:N  | `comments.task_id`         | Optional XOR with subtask           |
+| SubTask | Comment    | 1:N  | `comments.subtask_id`      | Optional XOR with task              |
+| User    | Comment    | 1:N  | `comments.user_id`         | Author                              |
 
 A comment is attached to **either** a task **or** a subtask (both FKs are nullable; application logic sets one parent).
 
@@ -316,77 +316,77 @@ A comment is attached to **either** a task **or** a subtask (both FKs are nullab
 
 #### `users`
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| `id` | Integer | PK, indexed |
-| `username` | String(255) | UNIQUE, NOT NULL |
-| `email` | String(255) | UNIQUE, NOT NULL, indexed |
-| `password_hash` | String(255) | NOT NULL |
-| `team_name` | String(255) | NULL |
+| Column          | Type        | Constraints               |
+| --------------- | ----------- | ------------------------- |
+| `id`            | Integer     | PK, indexed               |
+| `username`      | String(255) | UNIQUE, NOT NULL          |
+| `email`         | String(255) | UNIQUE, NOT NULL, indexed |
+| `password_hash` | String(255) | NOT NULL                  |
+| `team_name`     | String(255) | NULL                      |
 
 #### `roles`
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| `id` | Integer | PK, indexed |
-| `name` | String(100) | UNIQUE, NOT NULL, indexed |
-| `description` | String(255) | NULL |
+| Column        | Type        | Constraints               |
+| ------------- | ----------- | ------------------------- |
+| `id`          | Integer     | PK, indexed               |
+| `name`        | String(100) | UNIQUE, NOT NULL, indexed |
+| `description` | String(255) | NULL                      |
 
 #### `permissions`
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| `id` | Integer | PK, indexed |
-| `name` | String(100) | UNIQUE, NOT NULL, indexed |
-| `description` | String(255) | NULL |
+| Column        | Type        | Constraints               |
+| ------------- | ----------- | ------------------------- |
+| `id`          | Integer     | PK, indexed               |
+| `name`        | String(100) | UNIQUE, NOT NULL, indexed |
+| `description` | String(255) | NULL                      |
 
 #### `tasks`
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| `id` | Integer | PK, indexed |
-| `title` | String(255) | UNIQUE, NOT NULL |
-| `description` | Text | NULL |
-| `status` | Enum(`statusenum`) | NOT NULL, default `backlog` |
-| `sprint` | String | NULL |
-| `created_at` | DateTime(tz) | NOT NULL |
-| `updated_at` | DateTime(tz) | NOT NULL |
+| Column        | Type               | Constraints                 |
+| ------------- | ------------------ | --------------------------- |
+| `id`          | Integer            | PK, indexed                 |
+| `title`       | String(255)        | UNIQUE, NOT NULL            |
+| `description` | Text               | NULL                        |
+| `status`      | Enum(`statusenum`) | NOT NULL, default `backlog` |
+| `sprint`      | String             | NULL                        |
+| `created_at`  | DateTime(tz)       | NOT NULL                    |
+| `updated_at`  | DateTime(tz)       | NOT NULL                    |
 
 #### `subtasks`
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| `id` | Integer | PK, indexed |
-| `title` | String(255) | NOT NULL |
-| `status` | Enum(`statusenum`) | NOT NULL, default `backlog` |
-| `task_id` | Integer | FK to `tasks.id`, NOT NULL |
-| `created_at` | DateTime(tz) | NOT NULL |
-| `updated_at` | DateTime(tz) | NOT NULL |
+| Column       | Type               | Constraints                 |
+| ------------ | ------------------ | --------------------------- |
+| `id`         | Integer            | PK, indexed                 |
+| `title`      | String(255)        | NOT NULL                    |
+| `status`     | Enum(`statusenum`) | NOT NULL, default `backlog` |
+| `task_id`    | Integer            | FK to `tasks.id`, NOT NULL  |
+| `created_at` | DateTime(tz)       | NOT NULL                    |
+| `updated_at` | DateTime(tz)       | NOT NULL                    |
 
 Unique constraint: (`title`, `task_id`) — subtask titles are unique **within** a parent task.
 
 #### `comments`
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| `id` | Integer | PK, indexed |
-| `content` | String(500) | NOT NULL |
-| `task_id` | Integer | FK to `tasks.id`, NULL |
-| `subtask_id` | Integer | FK to `subtasks.id`, NULL |
-| `user_id` | Integer | FK to `users.id`, NULL |
-| `created_at` | DateTime(tz) | NOT NULL |
-| `updated_at` | DateTime(tz) | NOT NULL |
+| Column       | Type         | Constraints               |
+| ------------ | ------------ | ------------------------- |
+| `id`         | Integer      | PK, indexed               |
+| `content`    | String(500)  | NOT NULL                  |
+| `task_id`    | Integer      | FK to `tasks.id`, NULL    |
+| `subtask_id` | Integer      | FK to `subtasks.id`, NULL |
+| `user_id`    | Integer      | FK to `users.id`, NULL    |
+| `created_at` | DateTime(tz) | NOT NULL                  |
+| `updated_at` | DateTime(tz) | NOT NULL                  |
 
 Cascade: comments are deleted when their parent task or subtask is deleted (ORM cascade).
 
 #### Association tables
 
-| Table | Columns (composite PK) |
-|-------|------------------------|
-| `user_roles` | `user_id` to users, `role_id` to roles |
-| `role_permissions` | `role_id` to roles, `permission_id` to permissions |
-| `user_task_association` | `user_id` to users, `task_id` to tasks |
-| `user_subtask_association` | `user_id` to users, `subtask_id` to subtasks |
+| Table                      | Columns (composite PK)                             |
+| -------------------------- | -------------------------------------------------- |
+| `user_roles`               | `user_id` to users, `role_id` to roles             |
+| `role_permissions`         | `role_id` to roles, `permission_id` to permissions |
+| `user_task_association`    | `user_id` to users, `task_id` to tasks             |
+| `user_subtask_association` | `user_id` to users, `subtask_id` to subtasks       |
 
 ### 5.5 Status workflow diagram
 
@@ -409,14 +409,14 @@ stateDiagram-v2
   qa --> in_progress: rework allowed
 ```
 
-| Status | Meaning |
-|--------|---------|
-| `backlog` | Not yet scheduled for active work |
-| `todo` | Ready to start |
-| `in_progress` | Actively being worked |
-| `in_review` | Awaiting review |
-| `qa` | In quality verification |
-| `completed` | Finished |
+| Status        | Meaning                           |
+| ------------- | --------------------------------- |
+| `backlog`     | Not yet scheduled for active work |
+| `todo`        | Ready to start                    |
+| `in_progress` | Actively being worked             |
+| `in_review`   | Awaiting review                   |
+| `qa`          | In quality verification           |
+| `completed`   | Finished                          |
 
 Status transitions are not hard-locked in the database; the UI and services accept any valid enum value. The diagram shows the intended delivery path and common backflows.
 
@@ -449,12 +449,12 @@ PostgreSQL is the system of record. The schema is managed with **Alembic** migra
 
 Logical groupings:
 
-| Schema area | Tables |
-|-------------|--------|
-| Identity & access | `users`, `roles`, `permissions`, `user_roles`, `role_permissions` |
-| Work items | `tasks`, `subtasks` |
-| Collaboration | `comments` |
-| Assignment bridges | `user_task_association`, `user_subtask_association` |
+| Schema area        | Tables                                                            |
+| ------------------ | ----------------------------------------------------------------- |
+| Identity & access  | `users`, `roles`, `permissions`, `user_roles`, `role_permissions` |
+| Work items         | `tasks`, `subtasks`                                               |
+| Collaboration      | `comments`                                                        |
+| Assignment bridges | `user_task_association`, `user_subtask_association`               |
 
 ### 5.8 Database schema diagram
 
@@ -590,8 +590,8 @@ erDiagram
 
 ### 5.10 PostgreSQL enum types
 
-| Type name | Values |
-|-----------|--------|
+| Type name    | Values                                                           |
+| ------------ | ---------------------------------------------------------------- |
 | `statusenum` | `backlog`, `todo`, `in_progress`, `in_review`, `qa`, `completed` |
 
 Used by:
@@ -601,45 +601,45 @@ Used by:
 
 ### 5.11 Keys, indexes, and uniqueness
 
-| Table | Key / index | Definition |
-|-------|-------------|------------|
-| `users` | PK | `id` |
-| `users` | UNIQUE INDEX | `email` (`ix_users_email`) |
-| `users` | UNIQUE | `username` |
-| `users` | INDEX | `id` (`ix_users_id`) |
-| `roles` | PK | `id` |
-| `roles` | UNIQUE INDEX | `name` |
-| `permissions` | PK | `id` |
-| `permissions` | UNIQUE INDEX | `name` |
-| `tasks` | PK | `id` |
-| `tasks` | UNIQUE | `title` |
-| `tasks` | INDEX | `id` (`ix_tasks_id`) |
-| `subtasks` | PK | `id` |
-| `subtasks` | UNIQUE | (`title`, `task_id`) as `unique_subtask_per_task` |
-| `subtasks` | INDEX | `id` (`ix_subtasks_id`) |
-| `comments` | PK | `id` |
-| `comments` | INDEX | `id` (`ix_comments_id`) |
-| `user_roles` | COMPOSITE PK | (`user_id`, `role_id`) |
-| `role_permissions` | COMPOSITE PK | (`role_id`, `permission_id`) |
-| `user_task_association` | COMPOSITE PK | (`user_id`, `task_id`) |
-| `user_subtask_association` | COMPOSITE PK | (`user_id`, `subtask_id`) |
+| Table                      | Key / index  | Definition                                        |
+| -------------------------- | ------------ | ------------------------------------------------- |
+| `users`                    | PK           | `id`                                              |
+| `users`                    | UNIQUE INDEX | `email` (`ix_users_email`)                        |
+| `users`                    | UNIQUE       | `username`                                        |
+| `users`                    | INDEX        | `id` (`ix_users_id`)                              |
+| `roles`                    | PK           | `id`                                              |
+| `roles`                    | UNIQUE INDEX | `name`                                            |
+| `permissions`              | PK           | `id`                                              |
+| `permissions`              | UNIQUE INDEX | `name`                                            |
+| `tasks`                    | PK           | `id`                                              |
+| `tasks`                    | UNIQUE       | `title`                                           |
+| `tasks`                    | INDEX        | `id` (`ix_tasks_id`)                              |
+| `subtasks`                 | PK           | `id`                                              |
+| `subtasks`                 | UNIQUE       | (`title`, `task_id`) as `unique_subtask_per_task` |
+| `subtasks`                 | INDEX        | `id` (`ix_subtasks_id`)                           |
+| `comments`                 | PK           | `id`                                              |
+| `comments`                 | INDEX        | `id` (`ix_comments_id`)                           |
+| `user_roles`               | COMPOSITE PK | (`user_id`, `role_id`)                            |
+| `role_permissions`         | COMPOSITE PK | (`role_id`, `permission_id`)                      |
+| `user_task_association`    | COMPOSITE PK | (`user_id`, `task_id`)                            |
+| `user_subtask_association` | COMPOSITE PK | (`user_id`, `subtask_id`)                         |
 
 ### 5.12 Foreign keys and integrity
 
-| Child table | Column | References | Notes |
-|-------------|--------|------------|-------|
-| `subtasks` | `task_id` | `tasks.id` | Required parent |
-| `comments` | `task_id` | `tasks.id` | Nullable |
-| `comments` | `subtask_id` | `subtasks.id` | Nullable |
-| `comments` | `user_id` | `users.id` | Nullable author |
-| `user_roles` | `user_id` | `users.id` | |
-| `user_roles` | `role_id` | `roles.id` | |
-| `role_permissions` | `role_id` | `roles.id` | |
-| `role_permissions` | `permission_id` | `permissions.id` | |
-| `user_task_association` | `user_id` | `users.id` | |
-| `user_task_association` | `task_id` | `tasks.id` | |
-| `user_subtask_association` | `user_id` | `users.id` | |
-| `user_subtask_association` | `subtask_id` | `subtasks.id` | |
+| Child table                | Column          | References       | Notes           |
+| -------------------------- | --------------- | ---------------- | --------------- |
+| `subtasks`                 | `task_id`       | `tasks.id`       | Required parent |
+| `comments`                 | `task_id`       | `tasks.id`       | Nullable        |
+| `comments`                 | `subtask_id`    | `subtasks.id`    | Nullable        |
+| `comments`                 | `user_id`       | `users.id`       | Nullable author |
+| `user_roles`               | `user_id`       | `users.id`       |                 |
+| `user_roles`               | `role_id`       | `roles.id`       |                 |
+| `role_permissions`         | `role_id`       | `roles.id`       |                 |
+| `role_permissions`         | `permission_id` | `permissions.id` |                 |
+| `user_task_association`    | `user_id`       | `users.id`       |                 |
+| `user_task_association`    | `task_id`       | `tasks.id`       |                 |
+| `user_subtask_association` | `user_id`       | `users.id`       |                 |
+| `user_subtask_association` | `subtask_id`    | `subtasks.id`    |                 |
 
 **ORM cascade behaviour (application layer):**
 
@@ -650,12 +650,12 @@ Used by:
 
 ### 5.13 Schema evolution (Alembic)
 
-| Concern | Location |
-|---------|----------|
-| Migration scripts | `backend/alembic/versions/` |
-| Alembic config | `backend/alembic.ini` |
-| Apply migrations | `alembic upgrade head` |
-| ORM models (source of truth for app) | `backend/app/models/` |
+| Concern                              | Location                    |
+| ------------------------------------ | --------------------------- |
+| Migration scripts                    | `backend/alembic/versions/` |
+| Alembic config                       | `backend/alembic.ini`       |
+| Apply migrations                     | `alembic upgrade head`      |
+| ORM models (source of truth for app) | `backend/app/models/`       |
 
 Initial migration establishes core work tables and associations; later migrations add RBAC tables (`roles`, `permissions`, `user_roles`, `role_permissions`) and timestamp columns where applicable.
 
@@ -1154,4 +1154,4 @@ Seeds are idempotent for existing permission/role rows.
 
 ## Document control
 
-This file is the primary documentation for the TaskFlow application: product scope, architecture, domain, security, APIs, UI surfaces, caching, and runtime configuration. Update it when modules, permissions, routes, or operational requirements change.
+This file is the primary documentation for the DevTrack application: product scope, architecture, domain, security, APIs, UI surfaces, caching, and runtime configuration. Update it when modules, permissions, routes, or operational requirements change.
