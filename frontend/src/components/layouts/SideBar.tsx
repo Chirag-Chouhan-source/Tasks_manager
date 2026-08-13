@@ -17,15 +17,12 @@ type Props = {
 };
 
 export default function Sidebar({ onNavigateStart }: Props) {
-  // Navigation
   const pathname = usePathname();
 
-  // API
   const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
     data?: CurrentUser;
   };
 
-  // Menu Items
   const menuItems = [
     {
       label: "Dashboard",
@@ -124,7 +121,7 @@ export default function Sidebar({ onNavigateStart }: Props) {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    color: isActive ? "#3a538a" : "#9ca3af", // ✅ active = blue
+                    color: isActive ? "#3a538a" : "#9ca3af",
                   }}
                 >
                   {item.icon}

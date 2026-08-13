@@ -23,11 +23,9 @@ export default function StatusField({
   value,
   disabled = false,
 }: Props) {
-  // API
   const [updateTask] = useUpdateTaskMutation();
   const [updateSubtask] = useUpdateSubtaskMutation();
 
-  // Status Action
   const handleChange = async (newStatus: Status) => {
     try {
       if (entityType === "task") {

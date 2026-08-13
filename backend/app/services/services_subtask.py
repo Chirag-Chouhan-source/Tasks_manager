@@ -106,23 +106,19 @@ def get_subtasks(
     sort_by="created_at",
     sort_order="desc",
 ):
-    # Check if task exists
+
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
-    # ✅ ✅ CHANGE: JOIN TASK
     query = db.query(SubTask).join(Task).filter(Task.id == task_id)
 
-    # ✅ status
     if status:
         query = query.filter(SubTask.status == status)
 
-    # ✅ user
     if user_id:
         query = query.join(SubTask.users).filter(User.id == user_id)
 
-    # ✅ search
     if search:
         search = search.strip()
         if search:
@@ -294,7 +290,6 @@ def update_subtask(db: Session, subtask_id: int, subtask_data):
             subtask.users = users
             del update_data["users"]
 
-        # ✅ NEW
         if "title" in update_data:
             clean_title = update_data["title"].strip()
             normalized_title = clean_title.lower()

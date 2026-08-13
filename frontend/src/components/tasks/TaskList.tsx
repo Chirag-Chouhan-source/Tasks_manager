@@ -30,7 +30,6 @@ export default function TaskList({
   filters,
   sort,
 }: TaskListProps) {
-  // Task Board View
   const columns = STATUS_COLUMNS;
 
   const [columnPages, setColumnPages] = useState<Record<StatusKey, number>>({
@@ -65,7 +64,6 @@ export default function TaskList({
     completed_page: columnPages.completed,
   });
 
-  // Column Pagination
   const [loadingColumn, setLoadingColumn] = useState<StatusKey | null>(null);
   useEffect(() => {
     if (!isFetching) {
@@ -74,7 +72,6 @@ export default function TaskList({
   }, [isFetching]);
   const [isRefreshingBoard, setIsRefreshingBoard] = useState(false);
 
-  // Board Data Management
   const mergeUnique = (oldList: Task[] = [], newList: Task[] = []) => {
     const map = new Map();
     [...oldList, ...newList].forEach((item) => {
@@ -142,7 +139,6 @@ export default function TaskList({
     // });
   }, [filters, sort]);
 
-  // Error handling
   if (error) {
     return (
       <Box
@@ -215,30 +211,6 @@ export default function TaskList({
         alignItems: "flex-start",
       }}
     >
-      {/* {hasActiveFilters && totalBoardTasks === 0 && (
-        <Box
-          sx={{
-            position: "absolute",
-            left: "50%",
-            top: 16,
-            transform: "translateX(-50%)",
-            zIndex: 3,
-            px: 2.5,
-            py: 1.25,
-            borderRadius: 2,
-            bgcolor: "#ffffff",
-            border: "1px solid #e2e8f0",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
-            color: "#64748b",
-            fontSize: 14,
-            fontWeight: 500,
-            whiteSpace: "nowrap",
-          }}
-        >
-          No tasks match your filters
-        </Box>
-      )} */}
-
       {columns.map((col) => {
         const colTasks = columnData[col.key] ?? [];
         const totalCount = data?.[col.key]?.count ?? 0;
@@ -262,7 +234,6 @@ export default function TaskList({
               },
             }}
           >
-            {/* HEADER */}
             <Box
               sx={{
                 position: "sticky",
@@ -288,7 +259,6 @@ export default function TaskList({
               </Box>
             </Box>
 
-            {/* CONTENT */}
             <Box sx={{ px: 1, pt: 2, pb: 2 }}>
               {colTasks.length === 0 ? (
                 <Box

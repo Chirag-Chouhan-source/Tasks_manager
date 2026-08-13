@@ -23,7 +23,6 @@ export default function CommentInput({
   entityType,
   rightSlot,
 }: Props) {
-  // API
   const [addTaskComment, { isLoading: isAddingTask }] =
     useAddTaskCommentMutation();
   const [addSubtaskComment, { isLoading: isAddingSubtask }] =
@@ -32,14 +31,11 @@ export default function CommentInput({
     data?: CurrentUser;
   };
 
-  // Comment State
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
-  // Derived Data
   const isLoading = isAddingTask || isAddingSubtask;
 
-  // Comment Action
   const handleAddComment = async () => {
     if (!text.trim()) return;
 

@@ -133,7 +133,7 @@ export default function MobileDrawer() {
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      color: isActive ? "#3a538a" : "#9ca3af", // ✅ active = blue
+                      color: isActive ? "#3a538a" : "#9ca3af",
                     }}
                   >
                     {item.icon}

@@ -36,7 +36,6 @@ export default function FilterMenu({
   onClear,
   type = "task",
 }: Props) {
-  // PopOver State
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -48,7 +47,6 @@ export default function FilterMenu({
     setAnchorEl(null);
   };
 
-  //  DEFAULT FILTERS
   const defaultFilters = {
     status: "",
     user_id: "",
@@ -63,12 +61,10 @@ export default function FilterMenu({
 
   const sprint = localFilters.sprint || "";
 
-  // Full directory when allowed (needs user.view) — only used when no sprint
   const { data: directoryUsers } = useGetUsersQuery(undefined, {
     skip: !!sprint,
   });
 
-  // Always available with task.view: assignees from tasks (scoped by sprint when set)
   const { data: tasksForAssignees } = useGetTasksQuery({
     ...(sprint ? { sprint } : {}),
     page: 1,
@@ -84,8 +80,6 @@ export default function FilterMenu({
     ).values(),
   );
 
-  // No sprint: prefer full user directory; fall back / merge with task assignees
-  // Sprint selected: only users on that sprint's tasks
   const users: User[] = (() => {
     if (sprint) return usersFromTasks;
 
@@ -106,13 +100,9 @@ export default function FilterMenu({
     );
   })();
 
-  // Filter State
-
   useEffect(() => {
     setLocalFilters(filters || defaultFilters);
   }, [filters]);
-
-  // Filter Action
 
   const handleChange = (key: string, value: any) => {
     const updated = {
@@ -155,7 +145,6 @@ export default function FilterMenu({
       >
         <Box p={2} width={280}>
           <Box display="flex" flexDirection="column" gap={2}>
-            {/* HEADER */}
             <Box
               display="flex"
               justifyContent="space-between"
@@ -168,7 +157,6 @@ export default function FilterMenu({
               </IconButton>
             </Box>
 
-            {/* STATUS */}
             {type === "subtask" && (
               <FormControl fullWidth size="small">
                 <InputLabel>Status</InputLabel>
@@ -189,7 +177,6 @@ export default function FilterMenu({
               </FormControl>
             )}
 
-            {/* SPRINT */}
             {type === "task" && (
               <FormControl fullWidth size="small">
                 <InputLabel>Sprint</InputLabel>
@@ -210,7 +197,6 @@ export default function FilterMenu({
               </FormControl>
             )}
 
-            {/* ASSIGNEE */}
             <FormControl fullWidth size="small">
               <InputLabel>Assignee</InputLabel>
 
@@ -229,7 +215,6 @@ export default function FilterMenu({
               </Select>
             </FormControl>
 
-            {/* RESET */}
             <Box display="flex" justifyContent="flex-end">
               <Button
                 size="small"

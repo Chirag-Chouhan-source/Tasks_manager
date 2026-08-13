@@ -1,14 +1,13 @@
-from app.core.config import settings  # ✅ import settings
+from app.core.config import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-# ✅ use DATABASE_URL from config
+
 engine = create_engine(settings.DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-# ✅ dependency
 def get_db():
     db = SessionLocal()
     try:

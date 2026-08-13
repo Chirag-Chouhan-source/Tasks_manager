@@ -53,10 +53,8 @@ export default function SubtaskList({
   canCreateSubtask,
   canDeleteSubtask,
 }: Props) {
-  // Navigation
   const router = useRouter();
 
-  // Subtask List
   const [searchInput, setSearchInput] = useState("");
 
   const [filters, setFilters] = useState({
@@ -102,7 +100,6 @@ export default function SubtaskList({
 
   const subtasks = data?.results ?? [];
 
-  // Delete Subtask
   const [deleteSubtask] = useDeleteSubtaskMutation();
 
   const [openDelete, setOpenDelete] = useState(false);
@@ -192,10 +189,7 @@ export default function SubtaskList({
     }
   };
 
-  // Open Subtask
   const [loadingSubtaskId, setLoadingSubtaskId] = useState<number | null>(null);
-
-  // Notification
 
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -204,7 +198,6 @@ export default function SubtaskList({
 
   return (
     <Box>
-      {/* LOADER */}
       {loadingSubtaskId && (
         <Box
           sx={{
@@ -222,7 +215,6 @@ export default function SubtaskList({
         </Box>
       )}
 
-      {/* HEADER */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -303,7 +295,6 @@ export default function SubtaskList({
         </Box>
       </Box>
 
-      {/* SELECTION TOOLBAR — visible only when at least one item is selected */}
       <Collapse
         in={selectedIds.length > 0}
         timeout={250}
@@ -439,7 +430,6 @@ export default function SubtaskList({
         </Box>
       </Collapse>
 
-      {/* LIST */}
       {!subtasks?.length ? (
         <Typography color="text.secondary">
           {searchInput.trim()
@@ -549,7 +539,6 @@ export default function SubtaskList({
         </>
       )}
 
-      {/* DELETE DIALOG */}
       <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
         <DialogTitle>Delete Subtask</DialogTitle>
 
@@ -595,7 +584,6 @@ export default function SubtaskList({
         </DialogActions>
       </Dialog>
 
-      {/* ✅ ✅ ✅ SNACKBAR */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={2500}

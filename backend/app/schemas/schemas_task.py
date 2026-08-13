@@ -32,7 +32,7 @@ class TaskResponse(BaseModel):
     title: str
     description: str | None = None
 
-    status: StatusEnum  # ✅ required
+    status: StatusEnum
 
     sprint: str | None = None
 

@@ -47,14 +47,12 @@ export default function StatusSnackbar({
           minWidth: "260px",
         }}
       >
-        {/* ✅ ICON */}
         {isSuccess ? (
           <CheckCircleIcon sx={{ fontSize: 22 }} />
         ) : (
           <ErrorOutlineIcon sx={{ fontSize: 22 }} />
         )}
 
-        {/* ✅ MESSAGE */}
         <Typography
           sx={{
             fontSize: "14px",

@@ -34,23 +34,19 @@ import SortDropdown, {
 
 import { STATUS_VALUES } from "@/constants/status";
 
-import { CurrentUser, Task } from "@/types";
+import { CurrentUser, Status, Task } from "@/types";
 
 export default function TasksPage() {
-  // Navigation
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Responsive
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  // API
   const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
     data?: CurrentUser;
   };
   const [createTask] = useCreateTaskMutation();
 
-  // Search, Filter & Sorting
   const [searchInput, setSearchInput] = useState("");
 
   const [filters, setFilters] = useState({
@@ -75,18 +71,20 @@ export default function TasksPage() {
     return () => clearTimeout(timeout);
   }, [searchInput]);
 
-  // Status Navigation
-  const statusParam = searchParams.get("status") || "";
+  const rawStatus = searchParams.get("status") || "";
+  const statusParam: Status | "" = STATUS_VALUES.includes(rawStatus as Status)
+    ? (rawStatus as Status)
+    : "";
 
-  const [activeStatus, setActiveStatus] = useState(
+  const [activeStatus, setActiveStatus] = useState<Status | "">(
     statusParam || (isMobile ? "backlog" : ""),
   );
 
   useEffect(() => {
     const statusFromUrl = searchParams.get("status");
 
-    if (statusFromUrl) {
-      setActiveStatus(statusFromUrl);
+    if (statusFromUrl && STATUS_VALUES.includes(statusFromUrl as Status)) {
+      setActiveStatus(statusFromUrl as Status);
     } else {
       setActiveStatus(isMobile ? "backlog" : "");
     }
@@ -99,7 +97,7 @@ export default function TasksPage() {
     }));
   }, [activeStatus]);
 
-  const handleStatusChange = (status: string) => {
+  const handleStatusChange = (status: Status | "") => {
     setActiveStatus(status);
 
     const params = new URLSearchParams(searchParams.toString());
@@ -113,7 +111,6 @@ export default function TasksPage() {
     router.push(`/dashboard/tasks?${params.toString()}`);
   };
 
-  // pagination
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -121,7 +118,6 @@ export default function TasksPage() {
     setPage(1);
   }, [filters]);
 
-  // Create Tasks
   const [open, setOpen] = useState(false);
 
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(
@@ -138,11 +134,9 @@ export default function TasksPage() {
     setSelectedStatus(undefined);
   };
 
-  //  UI State
   const [showMobileSearch, setShowMobileSearch] = useState(false);
   const [loadingTaskId, setLoadingTaskId] = useState<number | null>(null);
 
-  // Snackbar Feedback notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -159,7 +153,6 @@ export default function TasksPage() {
     }
   }, [searchParams, router]);
 
-  // Data Fetching
   const { data, isFetching, isError } = useGetTasksQuery(
     {
       ...filters,
@@ -171,8 +164,9 @@ export default function TasksPage() {
     { skip: !hasToken() },
   );
 
-  // Derived UI
-  const statusTabs = isMobile ? STATUS_VALUES : ["", ...STATUS_VALUES];
+  const statusTabs: Array<Status | ""> = isMobile
+    ? STATUS_VALUES
+    : ["", ...STATUS_VALUES];
 
   const taskFilters = (
     <FilterMenu
@@ -198,7 +192,6 @@ export default function TasksPage() {
 
   const sortComponent = <SortDropdown value={sort} onChange={setSort} />;
 
-  // Error handling
   if (isError) return <p>Error fetching tasks</p>;
 
   return (
@@ -231,8 +224,6 @@ export default function TasksPage() {
           flexDirection: "column",
         }}
       >
-        {/* ✅ HEADER */}
-
         <Box
           sx={{ mb: 1.5, display: "flex", flexDirection: "column", gap: 1.5 }}
         >
@@ -257,7 +248,6 @@ export default function TasksPage() {
           />
         </Box>
 
-        {/* ✅ TASK LIST */}
         <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
           {!activeStatus ? (
             <TaskList
@@ -302,7 +292,6 @@ export default function TasksPage() {
           )}
         </Box>
 
-        {/* ✅ PAGINATION */}
         {activeStatus && data && (
           <TablePagination
             component="div"
@@ -320,7 +309,6 @@ export default function TasksPage() {
           />
         )}
 
-        {/* ✅ DIALOG */}
         <CreateTaskDialog
           open={open}
           onClose={handleClose}
@@ -331,7 +319,6 @@ export default function TasksPage() {
         />
       </Box>
 
-      {/* ✅ SNACKBAR */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

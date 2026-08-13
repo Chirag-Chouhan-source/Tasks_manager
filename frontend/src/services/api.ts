@@ -127,7 +127,7 @@ export const api = createApi({
         method: "POST",
         body: taskData,
       }),
-      invalidatesTags: ["Tasks"], // ✅ AUTO REFRESH TASKS
+      invalidatesTags: ["Tasks"],
     }),
 
     deleteTask: builder.mutation({
@@ -287,7 +287,6 @@ export const api = createApi({
       ],
     }),
 
-    // ✅ ADD SUBTASK COMMENT
     addSubtaskComment: builder.mutation<any, { subtaskId: number; data: any }>({
       query: ({ subtaskId, data }) => ({
         url: `/subtasks/${subtaskId}/comments`,

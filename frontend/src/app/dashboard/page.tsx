@@ -23,16 +23,13 @@ const STATUS_COLORS = {
 };
 
 export default function DashboardPage() {
-  // Navigation
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Data Fetching
   const { data, isLoading, isError } = useGetDashboardStatsQuery(undefined, {
     skip: !hasToken(),
   });
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -53,7 +50,6 @@ export default function DashboardPage() {
     }
   }, [searchParams, router]);
 
-  // Error Handling
   if (isError) {
     return <Typography color="error">Failed to load dashboard data</Typography>;
   }
@@ -62,7 +58,6 @@ export default function DashboardPage() {
     return <UILoader type="subtask" />;
   }
 
-  // Derived Data
   const totalUsers = data.total_users;
   const totalTasks = data.total_tasks;
   const totalSubtasks = data.total_subtasks;
@@ -101,7 +96,6 @@ export default function DashboardPage() {
           </Typography>
         </Box>
 
-        {/* OVERVIEW */}
         <Box
           sx={{
             display: "grid",
@@ -132,7 +126,6 @@ export default function DashboardPage() {
           />
         </Box>
 
-        {/* STATUS SECTION */}
         <Box
           sx={{
             p: 3,

@@ -27,15 +27,13 @@ import InputField from "../common/InputField";
 import StatusSnackbar from "../common/StatusSnackbar";
 import UserField from "../common/UserField";
 
-// ✅ TYPES
 type Props = {
   open: boolean;
   onClose: () => void;
   onCreate: (data: any) => Promise<void>;
-  defaultStatus?: string; // ✅ already added earlier
+  defaultStatus?: string;
 };
 
-// ✅ SCHEMA
 const taskSchema = z.object({
   title: z
     .string()
@@ -56,7 +54,6 @@ export default function CreateTaskDialog({
   onCreate,
   defaultStatus,
 }: Props) {
-  // Create Tasks
   const {
     control,
     handleSubmit,
@@ -132,14 +129,12 @@ export default function CreateTaskDialog({
     }
   };
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
 
-  // Form configuration
   const taskFormConfig = [
     {
       name: "title",
@@ -158,7 +153,6 @@ export default function CreateTaskDialog({
       icon: <DescriptionIcon fontSize="small" />,
     },
 
-    // ✅ grouped fields (very important)
     {
       type: "group",
       fields: [
@@ -232,7 +226,6 @@ export default function CreateTaskDialog({
           },
         }}
       >
-        {/* ✅ HEADER */}
         <DialogTitle sx={{ pb: 1 }}>
           <Typography fontWeight={700} fontSize={18}>
             Create Task
@@ -251,7 +244,6 @@ export default function CreateTaskDialog({
           </Box>
         </DialogContent>
 
-        {/* ✅ ACTIONS */}
         <DialogActions sx={{ px: 3, py: 2 }}>
           <Button onClick={onClose} sx={{ textTransform: "none" }}>
             Cancel

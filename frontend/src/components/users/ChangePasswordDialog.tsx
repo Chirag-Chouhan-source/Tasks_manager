@@ -54,7 +54,6 @@ const changePasswordSchema = z
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export default function ChangePasswordDialog({ open, onClose }: Props) {
-  // Change Password
   const [changePassword] = useChangePasswordMutation();
   const {
     control,
@@ -108,14 +107,11 @@ export default function ChangePasswordDialog({ open, onClose }: Props) {
     }
   };
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
-
-  // Form configuration
 
   const fields: {
     name: "current_password" | "new_password" | "confirm_password";

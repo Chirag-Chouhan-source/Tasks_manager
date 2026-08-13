@@ -40,8 +40,6 @@ const subtaskSchema = z.object({
 type SubtaskFormData = z.infer<typeof subtaskSchema>;
 
 export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
-  // Users
-
   const { data: users = [] } = useGetUsersQuery();
 
   const getUserNameById = (id: number) => {
@@ -49,7 +47,6 @@ export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
     return user?.username || "";
   };
 
-  // Create Subtasks
   const {
     control,
     handleSubmit,
@@ -102,14 +99,11 @@ export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
     }
   };
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
-
-  // Form Configuration
 
   const subtaskFormConfig = [
     {
@@ -164,7 +158,6 @@ export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
           },
         }}
       >
-        {/* ✅ HEADER */}
         <DialogTitle sx={{ pb: 1 }}>
           <Typography fontWeight={700} fontSize={18}>
             Create Subtask
@@ -178,15 +171,12 @@ export default function CreateSubtaskDialog({ open, onClose, onCreate }: any) {
 
         <DialogContent sx={{ mt: 2 }}>
           <Box display="flex" flexDirection="column" gap={2.5}>
-            {/* ✅ TITLE */}
             {subtaskFormConfig.map(renderField)}
 
-            {/* ✅ USERS (SAME METHOD AS TASK) */}
             <UserField name="users" control={control} />
           </Box>
         </DialogContent>
 
-        {/* ✅ ACTIONS */}
         <DialogActions sx={{ px: 3, py: 2 }}>
           <Button sx={{ textTransform: "none" }} onClick={onClose}>
             Cancel

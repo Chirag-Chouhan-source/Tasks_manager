@@ -52,7 +52,6 @@ const editUserSchema = z.object({
 type EditUserFormData = z.infer<typeof editUserSchema>;
 
 export default function EditUserDialog({ open, onClose, user }: Props) {
-  // Edit User
   const [updateUser] = useUpdateUserMutation();
 
   const {
@@ -105,10 +104,8 @@ export default function EditUserDialog({ open, onClose, user }: Props) {
     }
   };
 
-  // Role Management
   const { data: roles } = useGetRolesQuery(undefined);
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",

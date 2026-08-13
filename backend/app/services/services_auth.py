@@ -23,7 +23,6 @@ def create_user(db: Session, email: str, username: str, password: str):
     validate_username(username)
     validate_password_strength(password)
 
-    # ✅ 1. Check if user already exists
     existing_user = db.query(User).filter(User.email == email).first()
     if existing_user:
         raise HTTPException(
@@ -38,17 +37,14 @@ def create_user(db: Session, email: str, username: str, password: str):
             detail="User with this username already exists",
         )
 
-    # ✅ 2. Hash password
     password_hash = hash_password(password)
 
-    # ✅ 3. Create user object
     new_user = User(email=email, username=username, password_hash=password_hash)
 
     default_role = db.query(Role).filter(Role.name == "Developer").first()
     if default_role:
         new_user.roles = [default_role]
 
-    # ✅ 4. Save to DB
     db.add(new_user)
 
     try:
@@ -158,7 +154,6 @@ def update_me(
         )
 
     current_user.username = payload.username.strip()
-    # do not touch current_user.email
 
     try:
         db.commit()

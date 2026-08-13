@@ -46,11 +46,9 @@ type Props = {
 };
 
 export default function SortDropdown({ value, onChange }: Props) {
-  // Menu State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  // Helper
   const isSelected = (option: SortValue) =>
     option.sort_by === value.sort_by && option.sort_order === value.sort_order;
 

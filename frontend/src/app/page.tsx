@@ -45,7 +45,6 @@ export default function Home() {
         backgroundSize: "85px 85px",
       }}
     >
-      {/* Navbar */}
       <AppBar
         position="sticky"
         elevation={0}
@@ -104,7 +103,6 @@ export default function Home() {
         </Container>
       </AppBar>
 
-      {/* Hero */}
       <Container maxWidth="lg">
         <Box
           sx={{

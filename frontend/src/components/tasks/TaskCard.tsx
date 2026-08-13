@@ -24,14 +24,11 @@ type TaskCardProps = {
 };
 
 export default function TaskCard({ task, onClick }: TaskCardProps) {
-  // Navigation
   const router = useRouter();
 
-  // Task Overview
   const users = task.users || [];
   const statusConfig = STATUS_CONFIG[task.status];
 
-  // Subtask Management
   const [expanded, setExpanded] = useState(false);
   const [loadingSubtaskId, setLoadingSubtaskId] = useState<number | null>(null);
 
@@ -77,7 +74,6 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
         }}
       >
         <CardContent sx={{ p: 1.6 }}>
-          {/* HEADER */}
           <Box
             sx={{
               display: "flex",
@@ -110,7 +106,6 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
             />
           </Box>
 
-          {/* DESCRIPTION */}
           {task.description && (
             <Typography
               sx={{
@@ -124,7 +119,6 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
             </Typography>
           )}
 
-          {/* ✅ ASSIGNEES (FIXED EMPTY STATE) */}
           <Box
             sx={{
               mt: 1.2,
@@ -204,7 +198,6 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
             </Stack>
           </Box>
 
-          {/* SUBTASK TOGGLE */}
           <Box
             onClick={(e) => {
               if (task.subtasks?.length > 0) {
@@ -254,7 +247,6 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
             )}
           </Box>
 
-          {/* SUBTASK LIST */}
           {task.subtasks?.length > 0 && (
             <Box
               sx={{

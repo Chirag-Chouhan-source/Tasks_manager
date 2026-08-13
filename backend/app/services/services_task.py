@@ -2,14 +2,13 @@ from app.models.model_task import Task
 from app.models.model_users import User
 from app.schemas.schemas_enums import StatusEnum
 from fastapi import HTTPException
-from sqlalchemy import func  # ✅ ADD THIS IMPORT
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 
 def create_task(db: Session, task):
 
-    # ✅ FIX: normalize title for comparison
     normalized_title = task.title.strip().lower()
 
     exiting_task = (
@@ -19,7 +18,6 @@ def create_task(db: Session, task):
     if exiting_task:
         raise HTTPException(status_code=400, detail="Task already exists")
 
-    # ✅ FIX: save trimmed title (no trailing spaces)
     db_task = Task(
         title=task.title.strip(),
         description=task.description,
@@ -81,10 +79,8 @@ def get_tasks(
     sort_by="created_at",
     sort_order="desc",
 ):
-    # ✅ Base query
     query = db.query(Task)
 
-    # ✅ Filters
     if status:
         query = query.filter(Task.status == status)
 
@@ -108,10 +104,8 @@ def get_tasks(
         sort_column.asc() if sort_order == "asc" else sort_column.desc()
     )
 
-    # ✅ ✅ Total count
     total = query.count()
 
-    # ✅ Pagination
     tasks = query.offset(skip).limit(limit).all()
 
     result = []
@@ -151,7 +145,6 @@ def get_tasks(
                             }
                             for user in subtask.users
                         ],
-                        # ✅ FIXED SUBTASK COMMENTS
                         "comments": {
                             "count": len(subtask.comments),
                             "data": [
@@ -185,7 +178,6 @@ def get_tasks(
                         reverse=True,
                     )
                 ],
-                # ✅ FIXED TASK COMMENTS
                 "comments": {
                     "count": len(task.comments),
                     "data": [
@@ -213,7 +205,6 @@ def get_tasks(
             }
         )
 
-    # ✅ Return both
     return result, total
 
 
@@ -246,8 +237,8 @@ def get_task(db: Session, task_id: int):
                 "title": subtask.title,
                 "status": subtask.status.value,
                 "task_id": subtask.task_id,
-                "sprint": subtask.task.sprint,  # ✅ ADD
-                "users": [  # ✅ ADD
+                "sprint": subtask.task.sprint,
+                "users": [
                     {
                         "id": user.id,
                         "username": user.username,
@@ -313,15 +304,12 @@ def get_task(db: Session, task_id: int):
 
 
 def update_task(db: Session, task_id: int, task_data):
-    # ✅ Fetch task
     task = db.query(Task).filter(Task.id == task_id).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
-    # ✅ Get only provided fields
     update_data = task_data.dict(exclude_unset=True)
 
-    # ✅ Duplicate title validation
     if "title" in update_data:
         normalized_title = update_data["title"].strip().lower()
 
@@ -342,7 +330,6 @@ def update_task(db: Session, task_id: int, task_data):
 
         update_data["title"] = update_data["title"].strip()
 
-    # ✅ Handle users (many-to-many)
     if "users" in update_data:
         users = db.query(User).filter(User.id.in_(update_data["users"])).all()
 
@@ -352,11 +339,9 @@ def update_task(db: Session, task_id: int, task_data):
         task.users = users
         del update_data["users"]
 
-    # ✅ Apply updates dynamically
     for key, value in update_data.items():
         setattr(task, key, value)
 
-    # ✅ Commit with proper error handling
     try:
         db.commit()
 
@@ -377,7 +362,6 @@ def update_task(db: Session, task_id: int, task_data):
 
     db.refresh(task)
 
-    # ✅ Structured response
     return {
         "id": task.id,
         "title": task.title,

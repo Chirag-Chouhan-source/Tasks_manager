@@ -11,7 +11,6 @@ export default function UILoader({
   type = "full",
   text = "Loading...",
 }: Props) {
-  // ✅ FULL LOADER
   if (type === "full") {
     return (
       <Box
@@ -63,7 +62,6 @@ export default function UILoader({
     );
   }
 
-  // ✅ TASK SKELETON
   if (type === "task") {
     return (
       <Box display="flex" gap={2} width="100%">
@@ -88,7 +86,6 @@ export default function UILoader({
     );
   }
 
-  // ✅ SUBTASK SKELETON
   if (type === "subtask") {
     return (
       <Box display="flex" flexDirection="column" gap={1}>
@@ -108,25 +105,20 @@ export default function UILoader({
     );
   }
 
-  // ✅ DETAIL PAGE SKELETON
   if (type === "detail") {
     return (
       <Box p={3}>
-        {/* title */}
         <Skeleton height={30} width="50%" />
 
-        {/* small fields */}
         <Box mt={2}>
           <Skeleton height={20} width="30%" />
           <Skeleton height={20} width="50%" />
         </Box>
 
-        {/* description */}
         <Box mt={3}>
           <Skeleton height={80} />
         </Box>
 
-        {/* subtasks section */}
         <Box mt={3}>
           <Skeleton height={20} width="20%" />
           {[0, 1, 2].map((i) => (
@@ -136,7 +128,6 @@ export default function UILoader({
       </Box>
     );
   }
-  // ✅ TASK FLAT SKELETON (FOR TAG VIEW)
   if (type === "taskFlat") {
     return (
       <Box
@@ -167,7 +158,6 @@ export default function UILoader({
       </Box>
     );
   }
-  // ✅ KANBAN COLUMN SKELETON
   if (type === "kanbanColumn") {
     return (
       <Box sx={{ px: 1 }}>

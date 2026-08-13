@@ -5,12 +5,12 @@ from app.core.rbac import require_permission
 from app.core.redis_client import redis_client
 from app.db.session import get_db
 from app.schemas.schemas_subtasks import (
+    SubTaskBulkDelete,
+    SubTaskBulkDeleteResponse,
     SubTaskCreate,
     SubTaskListResponse,
     SubTaskResponse,
     SubTaskUpdate,
-    SubTaskBulkDeleteResponse,
-    SubTaskBulkDelete,
 )
 from app.services import services_subtask
 from fastapi import APIRouter, Depends, Query
@@ -31,7 +31,6 @@ def create_subtask(
 
     result = services_subtask.create_subtask(db, task_id, subtask)
 
-    # ✅ cache single subtask
     try:
         redis_client.setex(
             f"subtask:{result['id']}",
@@ -41,7 +40,6 @@ def create_subtask(
     except Exception:
         pass
 
-    # ✅ invalidate list cache
     try:
         for key in redis_client.scan_iter(f"subtasks:{task_id}:*"):
             redis_client.delete(key)
@@ -90,7 +88,6 @@ def get_subtasks(
         f"{page_size}"
     )
 
-    # ✅ safe cache read
     cached_data = None
     try:
         cached_data = redis_client.get(cache_key)
@@ -103,7 +100,6 @@ def get_subtasks(
         except Exception:
             redis_client.delete(cache_key)
 
-    # ✅ service call
     subtasks, total_count = services_subtask.get_subtasks(
         db,
         task_id=task_id,
@@ -123,7 +119,6 @@ def get_subtasks(
         "results": subtasks,
     }
 
-    # ✅ safe cache write
     if subtasks:
         try:
             redis_client.setex(
@@ -142,7 +137,6 @@ def get_subtask_by_id(subtask_id: int, db: Session = Depends(get_db)):
 
     cache_key = f"subtask:{subtask_id}"
 
-    # ✅ safe cache read
     cached_data = None
     try:
         cached_data = redis_client.get(cache_key)
@@ -155,10 +149,8 @@ def get_subtask_by_id(subtask_id: int, db: Session = Depends(get_db)):
         except Exception:
             redis_client.delete(cache_key)
 
-    # ✅ service call
     subtask = services_subtask.get_subtask_by_id(db, subtask_id)
 
-    # ✅ cache write
     try:
         redis_client.setex(
             cache_key,
@@ -181,7 +173,6 @@ def update_subtask(
 
     result = services_subtask.update_subtask(db, subtask_id, subtask)
 
-    # ✅ update cache
     try:
         redis_client.setex(
             f"subtask:{subtask_id}",
@@ -191,7 +182,6 @@ def update_subtask(
     except Exception:
         pass
 
-    # ✅ invalidate list cache
     try:
         for key in redis_client.scan_iter("subtasks:*"):
             redis_client.delete(key)
@@ -245,7 +235,6 @@ def delete_subtask(
 
     result = services_subtask.delete_subtask(db, subtask_id)
 
-    # ✅ delete cache
     try:
         redis_client.delete(f"subtask:{subtask_id}")
 

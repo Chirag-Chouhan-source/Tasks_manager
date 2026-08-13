@@ -42,11 +42,9 @@ const loginSchema = z.object({
 type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  // Navigation
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Form
   const {
     control,
     handleSubmit,
@@ -59,7 +57,6 @@ export default function LoginPage() {
     },
   });
 
-  // Authentication
   const dispatch = useDispatch();
   const [loginUser, { isLoading: isLoginLoading }] = useLoginUserMutation();
 
@@ -71,14 +68,12 @@ export default function LoginPage() {
       isLoading: boolean;
     };
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
 
-  // Redirect Effects
   useEffect(() => {
     if (currentUser) {
       router.replace("/dashboard");
@@ -98,7 +93,6 @@ export default function LoginPage() {
     }
   }, [searchParams]);
 
-  // Form Submission
   const onSubmit = async (data: LoginForm) => {
     try {
       const result = await loginUser(data).unwrap();
@@ -110,8 +104,6 @@ export default function LoginPage() {
       dispatch(api.util.resetApiState());
 
       router.push("/dashboard?status=login");
-
-      // ✅ DO NOT setLoading(false) here
     } catch (err: any) {
       setSnackbar({
         open: true,
@@ -121,7 +113,6 @@ export default function LoginPage() {
     }
   };
 
-  // Loading State
   if (hasToken() && isUserLoading) {
     return (
       <>
@@ -141,7 +132,6 @@ export default function LoginPage() {
       <Box className={styles.container}>
         <div className={styles.card}>
           <Paper elevation={0} className={styles.paperInner}>
-            {/* ✅ LEFT SIDE */}
             <Box className={styles.leftSection}>
               <Typography component="div" className={styles.brand}>
                 DevTrack
@@ -156,7 +146,6 @@ export default function LoginPage() {
               </Typography>
             </Box>
 
-            {/* ✅ RIGHT SIDE */}
             <Box className={styles.rightSection}>
               <Typography component="div" className={styles.title}>
                 Welcome back

@@ -33,7 +33,6 @@ def create_refresh_token(data: dict):
     )
 
 
-# ✅ Generic decoder (NEW)
 def decode_token(token: str):
     try:
         payload = jwt.decode(

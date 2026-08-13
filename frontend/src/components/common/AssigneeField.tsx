@@ -31,12 +31,10 @@ export default function AssigneeField({
   users: currentUsers,
   disabled = false,
 }: Props) {
-  // API
   const { data: users = [] } = useGetUsersQuery();
   const [updateTask] = useUpdateTaskMutation();
   const [updateSubtask] = useUpdateSubtaskMutation();
 
-  // Assignee State
   const [selectedUsers, setSelectedUsers] = useState<User[]>(
     currentUsers || [],
   );
@@ -45,11 +43,8 @@ export default function AssigneeField({
     setSelectedUsers(currentUsers || []);
   }, [currentUsers]);
 
-  // Dropdown State
   const [isOpen, setIsOpen] = useState(false);
-  // const [closeTimer, setCloseTimer] = useState<any>(null);
 
-  // Assignee Action
   const updateUsers = async (updatedUsers: User[]) => {
     const ids = updatedUsers.map((u) => u.id);
 

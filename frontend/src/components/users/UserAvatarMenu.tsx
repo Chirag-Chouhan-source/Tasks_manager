@@ -25,15 +25,12 @@ const manrope = Manrope({
 });
 
 export default function UserAvatarMenu() {
-  // Navigation
   const router = useRouter();
 
-  // User Account
   const { data: user } = useGetCurrentUserQuery(undefined, {
     skip: !hasToken(),
   }) as { data?: CurrentUser };
 
-  // User Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -45,7 +42,6 @@ export default function UserAvatarMenu() {
     setAnchorEl(null);
   };
 
-  // Logout
   const [logoutUser] = useLogoutUserMutation();
 
   const handleLogout = async () => {
@@ -63,7 +59,6 @@ export default function UserAvatarMenu() {
     window.location.replace("/login?status=logout");
   };
 
-  // Error Handling
   if (!user) {
     return null;
   }

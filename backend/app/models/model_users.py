@@ -15,12 +15,10 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     team_name = Column(String(255), nullable=True)
 
-    # ✅ many-to-many with Task
     tasks = relationship(
         "Task", secondary=user_task_association, back_populates="users"
     )
 
-    # ✅ one-to-many with Comment
     comments = relationship("Comment", back_populates="user", cascade="all, delete")
 
     subtasks = relationship(

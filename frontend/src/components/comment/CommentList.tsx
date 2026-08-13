@@ -8,7 +8,6 @@ type Props = {
 };
 
 export default function CommentList({ comments }: Props) {
-  // Empty State
   if (!comments?.length) {
     return (
       <Box
@@ -22,7 +21,6 @@ export default function CommentList({ comments }: Props) {
     );
   }
 
-  //  Helper
   const getRelativeTime = (dateString: string) => {
     const now = new Date();
     const date = new Date(dateString);

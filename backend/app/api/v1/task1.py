@@ -66,11 +66,10 @@ def get_tasks(
     ),
     db: Session = Depends(get_db),
 ):
-    # ✅ pagination
+
     skip = (page - 1) * page_size
     limit = page_size
 
-    # ✅ helper for cache key
     def normalize(value):
         if value is None:
             return "null"
@@ -89,7 +88,6 @@ def get_tasks(
         f"{page}:{page_size}"
     )
 
-    # ✅ cache read
     cached_data = None
     try:
         cached_data = redis_client.get(cache_key)
@@ -102,7 +100,6 @@ def get_tasks(
         except Exception:
             redis_client.delete(cache_key)
 
-    # ✅ service call (NO try/catch here)
     tasks, total = services_task.get_tasks(
         db,
         skip=skip,
@@ -115,7 +112,6 @@ def get_tasks(
         sort_order=sort_order,
     )
 
-    # ✅ response
     response = {
         "results": tasks,
         "count": total,
@@ -123,7 +119,6 @@ def get_tasks(
         "page_size": page_size,
     }
 
-    # ✅ cache write
     if tasks:
         try:
             redis_client.setex(cache_key, 180, json.dumps(response, default=str))
@@ -137,7 +132,6 @@ def get_tasks(
 def get_sprints(db: Session = Depends(get_db)):
     cache_key = "tasks:sprints"
 
-    # ✅ safe cache read
     cached_data = None
     try:
         cached_data = redis_client.get(cache_key)
@@ -150,11 +144,9 @@ def get_sprints(db: Session = Depends(get_db)):
         except Exception:
             redis_client.delete(cache_key)
 
-    # ✅ DB query (middleware will handle errors)
     sprints = db.query(Task.sprint).filter(Task.sprint.isnot(None)).distinct().all()
     sprint_list = [s[0] for s in sprints if s[0]]
 
-    # ✅ safe cache write
     if sprint_list:
         try:
             redis_client.setex(cache_key, 900, json.dumps(sprint_list))
@@ -240,7 +232,6 @@ def get_kanban_tasks(
 def get_task(task_id: int, db: Session = Depends(get_db)):
     cache_key = f"task:{task_id}"
 
-    # ✅ safe cache read
     cached_data = None
     try:
         cached_data = redis_client.get(cache_key)
@@ -253,10 +244,8 @@ def get_task(task_id: int, db: Session = Depends(get_db)):
         except Exception:
             redis_client.delete(cache_key)
 
-    # ✅ service call
     task = services_task.get_task(db, task_id)
 
-    # ✅ safe cache write
     try:
         redis_client.setex(
             cache_key,
@@ -279,7 +268,6 @@ def update_task(
 
     result = services_task.update_task(db, task_id, task)
 
-    # ✅ safe cache write
     try:
         redis_client.setex(
             f"task:{task_id}",
@@ -308,7 +296,6 @@ def delete_task(
 
     result = services_task.delete_task(db, task_id)
 
-    # ✅ safe cache deletion
     try:
         redis_client.delete(f"task:{task_id}")
 

@@ -1,3 +1,5 @@
+import { Status } from "@/types";
+
 export const STATUS_CONFIG = {
   backlog: {
     label: "Backlog",
@@ -34,7 +36,7 @@ export const STATUS_OPTIONS = Object.entries(STATUS_CONFIG).map(
   }),
 );
 
-export const STATUS_VALUES = Object.keys(STATUS_CONFIG);
+export const STATUS_VALUES = Object.keys(STATUS_CONFIG) as Status[];
 
 export const STATUS_COLUMNS: {
   key: StatusKey;

@@ -25,7 +25,6 @@ type Props = {
 };
 
 export default function DeleteUserDialog({ open, onClose, user }: Props) {
-  // Delete User
   const [deleteUser] = useDeleteUserMutation();
 
   const handleDelete = async () => {
@@ -51,7 +50,6 @@ export default function DeleteUserDialog({ open, onClose, user }: Props) {
     }
   };
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",

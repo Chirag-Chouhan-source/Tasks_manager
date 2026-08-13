@@ -3,7 +3,6 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 
 
-# ✅ Handle normal Python exceptions
 async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -15,7 +14,6 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# ✅ Handle FastAPI HTTP exceptions
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,

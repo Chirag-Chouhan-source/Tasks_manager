@@ -64,10 +64,8 @@ const registerSchema = z
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
-  // Navigation
   const router = useRouter();
 
-  // Form
   const {
     control,
     handleSubmit,
@@ -77,7 +75,6 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
   });
 
-  // Authentication
   const [registerUser, { isLoading: isRegisterLoading }] =
     useRegisterUserMutation();
 
@@ -89,33 +86,28 @@ export default function RegisterPage() {
       isLoading: boolean;
     };
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
 
-  // Password Strength
   const password = watch("password");
   const passwordStrength = getPasswordStrength(password || "");
   const strength = getPasswordStrengthLabel(passwordStrength);
 
-  // Render Effect
   useEffect(() => {
     if (currentUser) {
       router.replace("/dashboard");
     }
   }, [currentUser, router]);
 
-  // Form Submission
   const onSubmit = async (data: RegisterForm) => {
     const { confirmPassword, ...payload } = data;
 
     try {
       await registerUser(payload).unwrap();
 
-      // optional delay for better UX
       await new Promise((resolve) => setTimeout(resolve, 600));
 
       setSnackbar({
@@ -136,7 +128,6 @@ export default function RegisterPage() {
     }
   };
 
-  // Loading State
   if (hasToken() && isUserLoading) {
     return <CircularProgress />;
   }
@@ -146,7 +137,6 @@ export default function RegisterPage() {
       <Box className={styles.container}>
         <div className={styles.card}>
           <Paper elevation={0} className={styles.paperInner}>
-            {/* ✅ LEFT SIDE */}
             <Box className={styles.leftSection}>
               <div className={styles.brand}>DevTrack</div>
 
@@ -159,7 +149,6 @@ export default function RegisterPage() {
               </div>
             </Box>
 
-            {/* ✅ RIGHT SIDE */}
             <Box className={styles.rightSection}>
               <div className={styles.title}>Create Account</div>
 

@@ -45,17 +45,14 @@ type Props = {
 };
 
 export default function DetailedSubtask({ subtask }: Props) {
-  // Navigation
   const router = useRouter();
 
-  // API
   const [deleteSubtask] = useDeleteSubtaskMutation();
   const [updateSubtask] = useUpdateSubtaskMutation();
   const { data: currentUser } = useGetCurrentUserQuery(undefined) as {
     data?: CurrentUser;
   };
 
-  // Permissions
   const canUpdateSubtask = hasPermission(
     currentUser?.permissions,
     "subtask.update",
@@ -66,7 +63,6 @@ export default function DetailedSubtask({ subtask }: Props) {
     "subtask.delete",
   );
 
-  // Edit Title
   const [title, setTitle] = useState(subtask.title);
   const [titleError, setTitleError] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -120,7 +116,6 @@ export default function DetailedSubtask({ subtask }: Props) {
     }
   };
 
-  // Delete Subtask
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
@@ -144,7 +139,6 @@ export default function DetailedSubtask({ subtask }: Props) {
     }
   };
 
-  // Error Handling
   if (!subtask) return null;
 
   return (
@@ -168,7 +162,6 @@ export default function DetailedSubtask({ subtask }: Props) {
             overflow: "hidden",
           }}
         >
-          {/* HEADER */}
           <Box
             sx={{
               p: 2,
@@ -246,7 +239,6 @@ export default function DetailedSubtask({ subtask }: Props) {
             </Box>
           </Box>
 
-          {/* MAIN CONTENT (UNCHANGED) */}
           <Box
             sx={{
               p: 3,
@@ -329,7 +321,6 @@ export default function DetailedSubtask({ subtask }: Props) {
         </Box>
       </Box>
 
-      {/* DELETE DIALOG */}
       <Dialog
         open={openDelete}
         onClose={() => {

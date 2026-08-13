@@ -124,14 +124,12 @@ def delete_user(
             detail="User not found",
         )
 
-    # Cannot delete yourself
     if current_user.id == user_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="You cannot delete your own account",
         )
 
-    # Cannot delete last admin
     admin_count = db.query(User).join(User.roles).filter(Role.name == "Admin").count()
 
     is_admin = any(role.name == "Admin" for role in db_user.roles)
@@ -143,10 +141,8 @@ def delete_user(
         )
 
     try:
-        # Remove task assignments
         db_user.tasks = []
 
-        # Remove subtask assignments
         db_user.subtasks = []
 
         db.delete(db_user)

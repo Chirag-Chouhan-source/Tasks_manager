@@ -94,7 +94,6 @@ export default function UsersPage() {
           background: "linear-gradient(to bottom, #f8fafc, #ffffff)",
         }}
       >
-        {/* PAGE HEADER */}
         <Box sx={{ mb: 3 }}>
           <Typography
             sx={{
@@ -133,7 +132,6 @@ export default function UsersPage() {
             boxShadow: "0 4px 20px rgba(15,23,42,0.06)",
           }}
         >
-          {/* Desktop Header */}
           {!isMobile && (
             <Box
               sx={{
@@ -155,7 +153,6 @@ export default function UsersPage() {
             </Box>
           )}
 
-          {/* USERS */}
           <Box>
             {data
               ?.filter((user: User) => user.id !== currentUser?.id)
@@ -166,7 +163,6 @@ export default function UsersPage() {
 
                 return (
                   <Box key={user.id}>
-                    {/* MOBILE CARD */}
                     {isMobile ? (
                       <Box
                         sx={{
@@ -288,7 +284,6 @@ export default function UsersPage() {
                         )}
                       </Box>
                     ) : (
-                      /* DESKTOP ROW */
                       <Box
                         sx={{
                           display: "grid",

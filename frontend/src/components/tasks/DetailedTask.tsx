@@ -157,8 +157,6 @@ export default function DetailedTask({ task }: Props) {
     }
   };
 
-  // Error Handling
-
   if (isDeleting) {
     return <UILoader type="full" text="Deleting task..." />;
   }
@@ -366,7 +364,6 @@ export default function DetailedTask({ task }: Props) {
         </Box>
       </Box>
 
-      {/* ✅ SNACKBAR */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
@@ -378,7 +375,6 @@ export default function DetailedTask({ task }: Props) {
         </Alert>
       </Snackbar>
 
-      {/* DELETE TASK DIALOG */}
       <Dialog
         open={openDelete}
         onClose={() => setOpenDelete(false)}
@@ -410,7 +406,6 @@ export default function DetailedTask({ task }: Props) {
   );
 }
 
-// ✅ ✅ ✅ ROW FUNCTION (UNCHANGED — INCLUDED)
 function Row({ label, children }: any) {
   return (
     <Box

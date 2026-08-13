@@ -26,13 +26,11 @@ import { useGetCurrentUserQuery, useUpdateMeMutation } from "@/services/api";
 import { CurrentUser } from "@/types";
 
 export default function AccountPage() {
-  // API
   const { data: user } = useGetCurrentUserQuery(undefined) as {
     data?: CurrentUser;
   };
   const [updateMe, { isLoading }] = useUpdateMeMutation();
 
-  // Profile Editing
   const [username, setUsername] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -65,20 +63,16 @@ export default function AccountPage() {
     }
   };
 
-  // Security
   const [passwordOpen, setPasswordOpen] = useState(false);
 
-  // Notification
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success" as "success" | "error",
   });
 
-  // Guard Cluase
   if (!user) return null;
 
-  // Derived Values
   const hasChanges = username !== user.username;
   const roleName = user.roles?.[0] || "No Role";
   const roleConfig = ROLE_CONFIG[roleName] ?? ROLE_CONFIG.default;
@@ -91,7 +85,6 @@ export default function AccountPage() {
         background: "linear-gradient(180deg, #f8fafc 0%, #edf4ff 100%)",
       }}
     >
-      {/* HEADER */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h4" fontWeight={700}>
           My Account
@@ -107,7 +100,6 @@ export default function AccountPage() {
         </Typography>
       </Box>
 
-      {/* MAIN PROFILE HERO */}
       <Box
         sx={{
           position: "relative",
@@ -215,7 +207,6 @@ export default function AccountPage() {
         </Box>
       </Box>
 
-      {/* STATS GRID */}
       <Box
         sx={{
           display: "grid",
@@ -230,7 +221,6 @@ export default function AccountPage() {
           mb: 3,
         }}
       >
-        {/* PROFILE */}
         <Box
           sx={{
             p: 3,
@@ -324,7 +314,6 @@ export default function AccountPage() {
           <Typography fontWeight={600}>{user.email}</Typography>
         </Box>
 
-        {/* ORGANIZATION */}
         <Box
           sx={{
             p: 3,
@@ -378,7 +367,6 @@ export default function AccountPage() {
         </Box>
       </Box>
 
-      {/* QUICK ACTIONS */}
       <Box
         sx={{
           bgcolor: "#fff",
